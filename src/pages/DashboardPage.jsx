@@ -1,10 +1,16 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { loadMarkdownFiles } from '@/lib/mdLoader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import {
+  AnimatedTabs,
+  TabsList,
+  TabsTrigger,
+  AnimatedTabsContent,
+  useRegisterTabs,
+} from '@/components/ui/tabs'
 import {
   Table,
   TableBody,
@@ -67,14 +73,9 @@ function FileTable({ files }) {
   )
 }
 
-export default function DashboardPage() {
-  const { user, logout } = useAuth()
-  const allFiles = useMemo(() => loadMarkdownFiles(), [])
-  const [search, setSearch] = useState('')
-
-  const categories = useMemo(() => {
-    return [...new Set(allFiles.map(f => f.category))]
-  }, [allFiles])
+function TabContent({ allFiles, categories, search }) {
+  const tabValues = useMemo(() => ['all', ...categories], [categories])
+  useRegisterTabs(tabValues)
 
   const filterBySearch = (files) => {
     if (!search) return files
@@ -86,8 +87,30 @@ export default function DashboardPage() {
   }
 
   return (
+    <>
+      <AnimatedTabsContent value="all" className="m-0">
+        <FileTable files={filterBySearch(allFiles)} />
+      </AnimatedTabsContent>
+      {categories.map(cat => (
+        <AnimatedTabsContent key={cat} value={cat} className="m-0">
+          <FileTable files={filterBySearch(allFiles.filter(f => f.category === cat))} />
+        </AnimatedTabsContent>
+      ))}
+    </>
+  )
+}
+
+export default function DashboardPage() {
+  const { user, logout } = useAuth()
+  const allFiles = useMemo(() => loadMarkdownFiles(), [])
+  const [search, setSearch] = useState('')
+
+  const categories = useMemo(() => {
+    return [...new Set(allFiles.map(f => f.category))]
+  }, [allFiles])
+
+  return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <span className="font-semibold">MD Reader</span>
@@ -101,7 +124,6 @@ export default function DashboardPage() {
       </header>
 
       <main className="max-w-5xl mx-auto px-6 py-8">
-        {/* Search */}
         <div className="mb-6 max-w-sm">
           <Input
             placeholder="Ara..."
@@ -110,8 +132,7 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="all">
+        <AnimatedTabs defaultValue="all">
           <TabsList>
             <TabsTrigger value="all">Tümü</TabsTrigger>
             {categories.map(cat => (
@@ -122,16 +143,9 @@ export default function DashboardPage() {
           </TabsList>
 
           <div className="mt-4 border rounded-lg overflow-hidden">
-            <TabsContent value="all" className="m-0">
-              <FileTable files={filterBySearch(allFiles)} />
-            </TabsContent>
-            {categories.map(cat => (
-              <TabsContent key={cat} value={cat} className="m-0">
-                <FileTable files={filterBySearch(allFiles.filter(f => f.category === cat))} />
-              </TabsContent>
-            ))}
+            <TabContent allFiles={allFiles} categories={categories} search={search} />
           </div>
-        </Tabs>
+        </AnimatedTabs>
       </main>
     </div>
   )

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cva } from "class-variance-authority";
+import { cva } from "class-variance-authority"
 import { Tabs as TabsPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
@@ -19,32 +19,50 @@ function Tabs({
   );
 }
 
-const tabsListVariants = cva(
-  "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-9 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none",
-  {
-    variants: {
-      variant: {
-        default: "bg-muted",
-        line: "gap-1 bg-transparent",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-)
-
 function TabsList({
   className,
-  variant = "default",
+  children,
   ...props
 }) {
+  const listRef = React.useRef(null)
+  const [indicator, setIndicator] = React.useState({ left: 0, width: 0 })
+
+  const updateIndicator = React.useCallback(() => {
+    const list = listRef.current
+    if (!list) return
+    const active = list.querySelector('[data-state="active"]')
+    if (!active) return
+    setIndicator({
+      left: active.offsetLeft,
+      width: active.offsetWidth,
+    })
+  }, [])
+
+  React.useEffect(() => {
+    updateIndicator()
+    const observer = new MutationObserver(updateIndicator)
+    if (listRef.current) {
+      observer.observe(listRef.current, { attributes: true, subtree: true, attributeFilter: ['data-state'] })
+    }
+    return () => observer.disconnect()
+  }, [updateIndicator])
+
   return (
     <TabsPrimitive.List
+      ref={listRef}
       data-slot="tabs-list"
-      data-variant={variant}
-      className={cn(tabsListVariants({ variant }), className)}
-      {...props} />
+      className={cn(
+        "relative inline-flex w-fit items-center rounded-lg bg-muted p-1 text-muted-foreground h-9",
+        className
+      )}
+      {...props}
+    >
+      <div
+        className="absolute top-1 h-[calc(100%-8px)] rounded-md bg-background border transition-all duration-200 ease-out"
+        style={{ left: indicator.left, width: indicator.width }}
+      />
+      {children}
+    </TabsPrimitive.List>
   );
 }
 
@@ -56,14 +74,70 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 group-data-[variant=default]/tabs-list:data-[state=active]:shadow-none group-data-[variant=line]/tabs-list:data-[state=active]:shadow-none dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent dark:group-data-[variant=line]/tabs-list:data-[state=active]:border-transparent dark:group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent",
-        "data-[state=active]:bg-background data-[state=active]:text-foreground dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 dark:data-[state=active]:text-foreground",
-        "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100",
+        "relative z-10 inline-flex items-center justify-center rounded-md px-3 py-1 text-sm font-medium whitespace-nowrap transition-colors",
+        "text-muted-foreground hover:text-foreground",
+        "data-[state=active]:text-foreground",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "disabled:pointer-events-none disabled:opacity-50",
         className
       )}
       {...props} />
   );
+}
+
+const TabsContext = React.createContext({ direction: 0 })
+
+function AnimatedTabs({ className, onValueChange, ...props }) {
+  const [tabOrder, setTabOrder] = React.useState([])
+  const [direction, setDirection] = React.useState(0)
+  const prevIndexRef = React.useRef(0)
+
+  const handleValueChange = React.useCallback((value) => {
+    const newIndex = tabOrder.indexOf(value)
+    const prevIndex = prevIndexRef.current
+    if (newIndex !== -1) {
+      setDirection(newIndex > prevIndex ? 1 : -1)
+      prevIndexRef.current = newIndex
+    }
+    onValueChange?.(value)
+  }, [tabOrder, onValueChange])
+
+  return (
+    <TabsContext.Provider value={{ direction, setTabOrder }}>
+      <Tabs
+        className={className}
+        onValueChange={handleValueChange}
+        {...props}
+      />
+    </TabsContext.Provider>
+  )
+}
+
+function AnimatedTabsContent({
+  className,
+  ...props
+}) {
+  const { direction } = React.useContext(TabsContext)
+
+  return (
+    <TabsPrimitive.Content
+      data-slot="tabs-content"
+      className={cn(
+        "flex-1 outline-none overflow-hidden",
+        direction >= 0
+          ? "data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-200"
+          : "data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-left-4 data-[state=active]:duration-200",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function useRegisterTabs(values) {
+  const { setTabOrder } = React.useContext(TabsContext)
+  React.useEffect(() => {
+    setTabOrder?.(values)
+  }, [values, setTabOrder])
 }
 
 function TabsContent({
@@ -73,13 +147,17 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn(
-        "flex-1 outline-none",
-        "data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:duration-200",
-        className
-      )}
+      className={cn("flex-1 outline-none", className)}
       {...props} />
   );
 }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants }
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  AnimatedTabs,
+  AnimatedTabsContent,
+  useRegisterTabs,
+}
