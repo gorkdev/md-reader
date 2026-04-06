@@ -106,14 +106,15 @@ export default function DashboardPage() {
       <header className="border-b sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-6 h-14 flex items-center justify-between">
           <span className="font-semibold">MD Reader</span>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2.5 border rounded-lg px-2.5 py-1.5">
-              <div className="w-6 h-6 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold">
                 {initial}
               </div>
               <span className="text-sm font-medium capitalize">{user?.username}</span>
             </div>
-            <Button variant="destructive" size="xs" onClick={logout}>
+            <div className="w-px h-4 bg-border" />
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive" onClick={logout}>
               Çıkış Yap
             </Button>
           </div>
