@@ -98,23 +98,34 @@ export default function DashboardPage() {
     return [...new Set(allFiles.map(f => f.category))]
   }, [allFiles])
 
+  const initial = user?.username?.charAt(0)?.toUpperCase() || 'U'
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-6 h-14 flex items-center justify-between">
           <span className="font-semibold">MD Reader</span>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">{user?.username}</span>
-            <Button variant="ghost" size="sm" onClick={logout}>
-              Sign Out
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5 border rounded-lg px-2.5 py-1.5">
+              <div className="w-6 h-6 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold">
+                {initial}
+              </div>
+              <span className="text-sm font-medium">{user?.username}</span>
+            </div>
+            <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={logout}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
             </Button>
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-6 py-10">
-        {/* Hero section */}
+        {/* Title */}
         <div
           className="mb-10 transition-all duration-700 ease-out"
           style={{
@@ -128,54 +139,52 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Controls */}
-        <div
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 transition-all duration-700 ease-out"
-          style={{
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? 'translateY(0)' : 'translateY(8px)',
-            transitionDelay: '80ms',
-          }}
-        >
-          <Tabs defaultValue="all" className="w-full">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                {categories.map(cat => (
-                  <TabsTrigger key={cat} value={cat}>
-                    {CATEGORY_LABELS[cat] || cat}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-
-              <div className="w-full sm:w-64">
-                <Input
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div
-              className="mt-6 border rounded-lg overflow-hidden transition-all duration-700 ease-out"
-              style={{
-                opacity: mounted ? 1 : 0,
-                transform: mounted ? 'translateY(0)' : 'translateY(8px)',
-                transitionDelay: '160ms',
-              }}
-            >
-              <TabsContent value="all" className="m-0">
-                <FileTable files={filterBySearch(allFiles, search)} />
-              </TabsContent>
+        {/* Controls + Table */}
+        <Tabs defaultValue="all" className="w-full">
+          <div
+            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 transition-all duration-700 ease-out"
+            style={{
+              opacity: mounted ? 1 : 0,
+              transform: mounted ? 'translateY(0)' : 'translateY(8px)',
+              transitionDelay: '80ms',
+            }}
+          >
+            <TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
               {categories.map(cat => (
-                <TabsContent key={cat} value={cat} className="m-0">
-                  <FileTable files={filterBySearch(allFiles.filter(f => f.category === cat), search)} />
-                </TabsContent>
+                <TabsTrigger key={cat} value={cat}>
+                  {CATEGORY_LABELS[cat] || cat}
+                </TabsTrigger>
               ))}
+            </TabsList>
+
+            <div className="w-full sm:w-64">
+              <Input
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
-          </Tabs>
-        </div>
+          </div>
+
+          <div
+            className="border rounded-lg transition-all duration-700 ease-out"
+            style={{
+              opacity: mounted ? 1 : 0,
+              transform: mounted ? 'translateY(0)' : 'translateY(8px)',
+              transitionDelay: '160ms',
+            }}
+          >
+            <TabsContent value="all" className="m-0">
+              <FileTable files={filterBySearch(allFiles, search)} />
+            </TabsContent>
+            {categories.map(cat => (
+              <TabsContent key={cat} value={cat} className="m-0">
+                <FileTable files={filterBySearch(allFiles.filter(f => f.category === cat), search)} />
+              </TabsContent>
+            ))}
+          </div>
+        </Tabs>
       </main>
     </div>
   )
