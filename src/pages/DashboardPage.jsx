@@ -114,7 +114,7 @@ export default function DashboardPage() {
               <span className="text-sm font-medium capitalize">{user?.username}</span>
             </div>
             <div className="w-px h-4 bg-border" />
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive" onClick={logout}>
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive pr-0" onClick={logout}>
               Çıkış Yap
             </Button>
           </div>
