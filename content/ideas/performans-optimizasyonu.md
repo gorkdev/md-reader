@@ -1,118 +1,118 @@
-<!-- title: Performans Optimizasyonu Fikirleri -->
+<!-- title: Performance Optimization Ideas -->
 <!-- date: 2026-04-06 -->
 <!-- category: ideas -->
 
-# Performans Optimizasyonu Fikirleri
+# Performance Optimization Ideas
 
-Sistem performansını artırmak için teknik iyileştirme önerileri.
+Technical improvement suggestions to increase system performance.
 
-## Frontend Optimizasyonları
+## Frontend Optimizations
 
 ### Code Splitting
 
-Sayfaları daha küçük parçalara bölmek:
+Split pages into smaller chunks:
 
 - Route-based code splitting
 - Component-level lazy loading
 - Conditional polyfills
 - Module federation
 
-Bu yaklaşım initial bundle boyutunu %40 oranında azaltabilir.
+This approach can reduce initial bundle size by 40%.
 
-### Resim Optimizasyonu
+### Image Optimization
 
-Görsel varlıkları optimize etme:
+Optimize visual assets:
 
-- WebP formatına dönüştürme
+- Convert to WebP format
 - Responsive image srcsets
-- Lazy loading resimler
+- Lazy load images
 - Modern image compression (AVIF)
 
-Beklenen iyileştirme: %35-50 boyut azalması
+Expected improvement: 35-50% size reduction
 
-### Caching Stratejisi
+### Caching Strategy
 
-İstemci tarafı caching'i geliştirme:
+Improve client-side caching:
 
 ```
-- Service Worker kullanımı
-- Cache-first stratejisi static varlıklar için
-- Stale-while-revalidate stratejisi API'ler için
-- Local storage kullanımı form taslakları için
+- Service Worker usage
+- Cache-first strategy for static assets
+- Stale-while-revalidate strategy for APIs
+- Local storage usage for form drafts
 ```
 
-## Backend Optimizasyonları
+## Backend Optimizations
 
 ### Database Indexing
 
-Sık sorgulanan alanları indeksle:
+Index frequently queried fields:
 
-- Tarih aralığı sorguları
-- Kategori filtreleme
-- Kullanıcı taraması
-- Tam metin arama
+- Date range queries
+- Category filtering
+- User searches
+- Full-text search
 
-Beklenen iyileştirme: Sorgu sürelerinde %50-70 azalış
+Expected improvement: 50-70% reduction in query times
 
 ### API Response Caching
 
-API yanıtlarını cache'le:
+Cache API responses:
 
-- Redis kullanımı
-- TTL stratejileri
-- Cache invalidation planı
+- Redis usage
+- TTL strategies
+- Cache invalidation plan
 - Partial cache updates
 
 ### Database Query Optimization
 
-Sorunlu sorguları belirle ve optimize et:
+Identify and optimize problematic queries:
 
 ```sql
--- Sorunlu: N+1 problem
+-- Problem: N+1 issue
 SELECT * FROM users;
 foreach user: SELECT * FROM posts WHERE user_id = user.id;
 
--- Optimize: Join kullan
+-- Optimize: Use JOIN
 SELECT u.*, p.* FROM users u 
 JOIN posts p ON u.id = p.user_id;
 ```
 
-## Altyapı Optimizasyonları
+## Infrastructure Optimizations
 
-### CDN Entegrasyonu
+### CDN Integration
 
-Content Delivery Network kullanımı:
+Content Delivery Network usage:
 
-- Static varlıklar CDN üzerinde sunma
+- Serve static assets from CDN
 - Geo-distributed nodes
-- Cache headers optimizasyonu
-- Compression aktifleştirme (gzip, brotli)
+- Cache headers optimization
+- Enable compression (gzip, brotli)
 
-### Veritabanı Replication
+### Database Replication
 
-Okuma yükünü dağıtma:
+Distribute read load:
 
 - Read replicas
 - Multi-region setup
 - Load balancing
-- Failover mekanizması
+- Failover mechanism
 
-### Monitoring ve Profiling
+### Monitoring and Profiling
 
-Performans problemlerini tespit etme:
+Identify performance issues:
 
-- APM araçları (Application Performance Monitoring)
-- Custom metrics takibi
+- APM tools (Application Performance Monitoring)
+- Custom metrics tracking
 - User experience monitoring
-- Bottleneck analizi
+- Bottleneck analysis
 
-## Tahmini İyileştirmeler
+## Estimated Improvements
 
-| Başlık | Mevcut | Hedef | İyileştirme |
+| Metric | Current | Target | Improvement |
 |--------|--------|-------|-------------|
 | Page Load Time | 2.3s | 1.2s | -48% |
 | API Response | 250ms | 100ms | -60% |
 | Bundle Size | 450KB | 270KB | -40% |
 | DB Query Time | 350ms | 80ms | -77% |
 
-Bu optimizasyonlar 8-10 hafta içinde uygulanabilir ve sistem performansını belirgin şekilde artıracaktır.
+These optimizations can be implemented within 8-10 weeks and will significantly improve system performance.

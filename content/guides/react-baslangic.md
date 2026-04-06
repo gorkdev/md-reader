@@ -1,16 +1,16 @@
-<!-- title: React Başlangıç Rehberi -->
+<!-- title: React Getting Started Guide -->
 <!-- date: 2026-04-03 -->
 <!-- category: guides -->
 
-# React Başlangıç Rehberi
+# React Getting Started Guide
 
-React, kullanıcı arayüzü oluşturmak için bir JavaScript kütüphanesidir. Bu rehber yeni başlayanlar için temel kavramları açıklamaktadır.
+React is a JavaScript library for building user interfaces. This guide explains fundamental concepts for beginners.
 
-## React Nedir?
+## What is React?
 
-React, Facebook tarafından geliştirilen ve açık kaynak olan bir JavaScript kütüphanesidir. Bileşen tabanlı bir mimari kullanarak dinamik web uygulamaları oluşturmayı kolaylaştırır.
+React is an open-source JavaScript library developed by Facebook. It simplifies the creation of dynamic web applications using a component-based architecture.
 
-## Kurulum
+## Installation
 
 ```bash
 npx create-react-app my-app
@@ -18,35 +18,35 @@ cd my-app
 npm start
 ```
 
-Yukarıdaki komutlar yeni bir React projesi oluşturur ve geliştirme sunucusunu başlatır.
+The above commands create a new React project and start the development server.
 
-## Temel Kavramlar
+## Core Concepts
 
 ### JSX
 
-JSX, JavaScript içinde HTML yazmanıza olanak tanır:
+JSX allows you to write HTML within JavaScript:
 
 ```jsx
-const element = <h1>Merhaba Dünya!</h1>;
+const element = <h1>Hello World!</h1>;
 ```
 
-### Bileşenler (Components)
+### Components
 
-Bileşenler React'in yapı taşlarıdır. Fonksiyonel bileşen örneği:
+Components are the building blocks of React. Example of a functional component:
 
 ```jsx
 function Welcome(props) {
-  return <h1>Merhaba, {props.name}!</h1>;
+  return <h1>Hello, {props.name}!</h1>;
 }
 ```
 
-### State ve Props
+### State and Props
 
-Props, bileşenlere veri geçirmek için kullanılır. State ise bileşenin içinde değişen verileri tutmak için kullanılır.
+Props are used to pass data to components. State is used to hold changing data within a component.
 
-## Kaynaklar
+## Resources
 
-- [React Resmi Dokümantasyonu](https://react.dev)
-- [React Türkçe Topluluk](https://turkishreact.dev)
+- [React Official Documentation](https://react.dev)
+- [React Community](https://react.dev)
 
-Bu rehber temel bilgileri kapsamaktadır. Daha ileri konular için resmi dokümantasyonu ziyaret etmeyi önerilmektedir.
+This guide covers fundamental information. For more advanced topics, it is recommended to visit the official documentation.

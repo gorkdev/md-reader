@@ -1,28 +1,28 @@
-<!-- title: Günlük Notlar - 6 Nisan 2026 -->
+<!-- title: Daily Notes - April 6, 2026 -->
 <!-- date: 2026-04-06 -->
 <!-- category: notes -->
 
-# Günlük Notlar - 6 Nisan 2026
+# Daily Notes - April 6, 2026
 
-## Sabah
+## Morning
 
-Bugün sabah erkenden ofise geldim ve e-mailleri kontrol ettim. Müşteriden gelen üç acil istekten biri daha iyileştirilmesi gereken sayfanın performans sorunlarıyla ilgiliydi. Build süresini azaltmak için webpack konfigürasyonunu değerlendirmeye başladım.
+I arrived at the office early this morning and checked emails. One of the three urgent requests from the customer was related to performance issues on a page that needs improvement. I started evaluating the webpack configuration to reduce build time.
 
-## Öğle
+## Afternoon
 
-Öğle saatinden sonra takım lideriyle bir buluşma vardı. Yeni geliştirme ortamı kurallarından bahsetti ve kod kalitesi standartlarını vurguladı. Herkesin yeni ESLint konfigürasyonunu güncellemesi gerektiğini öğrendim.
+I had a meeting with the team lead after lunch. He mentioned the new development environment rules and emphasized code quality standards. I learned that everyone needs to update the new ESLint configuration.
 
-## Akşam
+## Evening
 
-Akşam yine test yazma üzerine çalıştım. Unit test kapsamını artırmak için jest snapshot testleri ekledim. Karma testleri çalıştırdığımda %87 geçiş oranı elde ettim, bu da hedefimizin altında.
+I worked on test writing again in the evening. I added jest snapshot tests to increase unit test coverage. When I ran the tests, I achieved an 87% pass rate, which is below our target.
 
-## Yapılması Gerekenler
+## To-Do List
 
-- [ ] Integration test'lerini tamamla
-- [ ] Deployment kılavuzunu güncelle
-- [ ] Teknik dokümantasyonu revize et
-- [ ] Ekip üyelerine kod review'lerini ver
+- [ ] Complete integration tests
+- [ ] Update deployment guide
+- [ ] Review technical documentation
+- [ ] Provide code reviews to team members
 
-## Not
+## Note
 
-Yarın önemli bir müşteri sunumu var. Hazırlıkları tamamlamam gerekiyor.
+There is an important customer presentation tomorrow. I need to complete the preparations.

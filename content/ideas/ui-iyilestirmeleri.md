@@ -1,75 +1,75 @@
-<!-- title: UI İyileştirme Önerileri -->
+<!-- title: UI Improvement Suggestions -->
 <!-- date: 2026-04-05 -->
 <!-- category: ideas -->
 
-# UI İyileştirme Önerileri
+# UI Improvement Suggestions
 
-Kullanıcı arayüzünü daha modern, sezgisel ve estetik hale getirmek için önerilen değişiklikler.
+Proposed changes to make the user interface more modern, intuitive, and aesthetically pleasing.
 
-## Tasarım Sistemi Modernizasyonu
+## Design System Modernization
 
-Mevcut tasarım sistemi güncellenebilir:
+The current design system can be updated:
 
-- Daha büyük tipografi ölçeği
-- Renk paletini genişletme
-- Spacing ve rhythm'ı standardize etme
-- Ikon setini modernleştirme
-- Shadow ve elevation'ı revize etme
+- Larger typography scale
+- Expand color palette
+- Standardize spacing and rhythm
+- Modernize icon set
+- Revise shadows and elevation
 
-Bu değişiklikler tüm bileşenleri etkileyecektir ancak uygulanması 4-5 hafta sürecektir.
+These changes will affect all components but will take 4-5 weeks to implement.
 
-## Navigasyon Redesign
+## Navigation Redesign
 
-Ana navigasyonun yeniden tasarlanması:
+Redesign of the main navigation:
 
 ```
-Mevcut: Statik sidebar
-Önerilen: Tabletop adaptif navigation
-- Masaüstü: Sidebar
+Current: Static sidebar
+Proposed: Responsive adaptive navigation
+- Desktop: Sidebar
 - Tablet: Bottom navigation
-- Mobil: Drawer/hamburger
+- Mobile: Drawer/hamburger
 ```
 
-## Boş Durum Görüntüleri (Empty States)
+## Empty States
 
-Kullanıcıları rehber eden daha iyi empty state tasarımları:
+Better empty state designs that guide users:
 
-- İllüstrasyonlar ekleyin
-- Kısa rehberlik metni
-- Call-to-action butonları
-- Daha az bunuzdur çelişkisi
+- Add illustrations
+- Brief guidance text
+- Call-to-action buttons
+- Reduce cognitive confusion
 
-Örnek: Boş dosya listesi yerine, kullanıcıya nasıl dosya oluşturacağını gösteren görsel ve mesaj.
+Example: Instead of an empty file list, show a visual and message that teaches the user how to create a file.
 
-## Dark Mode Geliştirmesi
+## Dark Mode Enhancement
 
-Gecelik kullanıcılar için iyileştirilmiş koyu mod:
+Improved dark mode for night-time users:
 
-- Renk kontrastı WCAG uyumluluğu
-- Göz yorgunluğunu azaltmak için soft renkler
-- Otomatik sistem tercihi algılama
-- Tercih kaydetme
+- Color contrast WCAG compliance
+- Soft colors to reduce eye strain
+- Automatic system preference detection
+- Preference persistence
 
 ## Micro-interactions
 
-Kullanıcı etkileşimini daha keyifli hale getirmek:
+Make user interactions more enjoyable:
 
-- Button hover ve click efektleri
-- Form geçiş animasyonları
-- Notification entrance/exit animasyonları
-- Loading spinner tasarımı
-- Success/error animasyonları
+- Button hover and click effects
+- Form transition animations
+- Notification entrance/exit animations
+- Loading spinner design
+- Success/error animations
 
-Tahmini çabası: 3 hafta
-Önem: Orta (UX iyileştirmesi)
+Estimated effort: 3 weeks
+Priority: Medium (UX improvement)
 
-## Responsive Design İyileştirmeleri
+## Responsive Design Improvements
 
-Tüm cihazlar için optimize edilmiş deneyim:
+Optimized experience for all devices:
 
-- Tablet optimizasyonu (çoğunlukla eksik)
-- Fold edilebilir cihaz desteği
-- Touch-friendly hedef boyutları (minimum 44x44px)
-- Landscape mod desteği
+- Tablet optimization (mostly missing)
+- Foldable device support
+- Touch-friendly target sizes (minimum 44x44px)
+- Landscape mode support
 
-Bu öneriler birlikte uygulandığında, ürün daha modern ve kullanıcı dostu hale gelecektir.
+When these suggestions are implemented together, the product will become more modern and user-friendly.

@@ -1,71 +1,71 @@
-<!-- title: Yeni Özellik Fikirleri -->
+<!-- title: New Feature Ideas -->
 <!-- date: 2026-04-04 -->
 <!-- category: ideas -->
 
-# Yeni Özellik Fikirleri
+# New Feature Ideas
 
-Ürün ekibinden toplanan ve kullanıcı feedback'inden hareketle oluşturulan yeni özellik önerileri aşağıdadır.
+New feature proposals collected from the product team and based on user feedback are listed below.
 
-## İşbirliği Özellikleri
+## Collaboration Features
 
-Birden fazla kullanıcunun aynı dokümanda gerçek zamanlı olarak çalışabilmesi sağlanabilir. Google Docs tarzında:
+Enable multiple users to work on the same document in real-time. Similar to Google Docs:
 
-- Gerçek zamanlı ortak düzenleme
-- Revizyon geçmişi ve version control
-- Yorum ve mention sistemi
-- Değişiklikleri izleme (change tracking)
+- Real-time collaborative editing
+- Revision history and version control
+- Comment and mention system
+- Change tracking
 
-Tahmini çabası: 6 hafta
-İklim: Yüksek (kullanıcılar tarafından sıkça talep edilmektedir)
+Estimated effort: 6 weeks
+Priority: High (frequently requested by users)
 
-## Gelişmiş Arama
+## Advanced Search
 
-Mevcut arama işlevi iyileştirilebilir:
+The current search function can be improved:
 
-- Full-text arama
-- Etiket ve kategori filtreleme
-- Tarih aralığı filtreleme
-- Kaydedilmiş arama sorguları
-- Arama önerileri (suggestions)
+- Full-text search
+- Tag and category filtering
+- Date range filtering
+- Saved search queries
+- Search suggestions
 
-Tahmini çabası: 3 hafta
-Sira: Orta
+Estimated effort: 3 weeks
+Priority: Medium
 
-## Yapay Zeka Destekli Özellikleri
+## AI-Powered Features
 
-Yazma ve organizasyon için AI yardımcısı:
+AI assistant for writing and organization:
 
-- Otomatik başlık önerisi
-- İçerik özetleme
-- Yazım ve dilbilgisi kontrolü
-- Otomatik etiketleme
-- Benzer dokümanlara linkler
+- Automatic title suggestions
+- Content summarization
+- Spell and grammar checking
+- Automatic tagging
+- Links to similar documents
 
-Tahmini çabası: 8 hafta
-İşbirliği: Yüksek
+Estimated effort: 8 weeks
+Priority: High
 
-## Şablon Sistemi
+## Template System
 
-Ortak belgeler için pre-built şablonlar:
+Pre-built templates for common documents:
 
-- Proje raporu şablonu
-- Toplantı notu şablonu
-- Blog yazısı şablonu
-- Teknik dokümantasyon şablonu
+- Project report template
+- Meeting notes template
+- Blog post template
+- Technical documentation template
 
-Tahmini çabası: 2 hafta
-Ağırlık: Düşük
+Estimated effort: 2 weeks
+Priority: Low
 
-## Entegrasyonlar
+## Integrations
 
-Popülar hizmetlerle entegrasyon:
+Integration with popular services:
 
-- Slack bildirimler
-- Dropbox senkronizasyonu
-- GitHub webhook'ları
-- Zapier desteği
+- Slack notifications
+- Dropbox synchronization
+- GitHub webhooks
+- Zapier support
 
-Tahmini çabası: 4 hafta
-Sıra: Orta
+Estimated effort: 4 weeks
+Priority: Medium
 
-Tüm bu fikirler kullanıcı memnuniyeti ve sistem verimliliğini artıracaktır. Teknik danışmanlarla değerlendirilecek ve ürün haritasına dahil edilecektir.
+All of these ideas will improve user satisfaction and system efficiency. They will be evaluated with technical advisors and included in the product roadmap.

@@ -1,14 +1,14 @@
-<!-- title: CSS İpuçları ve En İyi Pratikler -->
+<!-- title: CSS Tips and Best Practices -->
 <!-- date: 2026-04-04 -->
 <!-- category: guides -->
 
-# CSS İpuçları ve En İyi Pratikler
+# CSS Tips and Best Practices
 
-CSS, web tasarımının temel yapı taşlarından biridir. Bu rehber, verimli ve sürdürülebilir CSS yazmanın ipuçlarını sunmaktadır.
+CSS is one of the fundamental building blocks of web design. This guide offers tips for writing efficient and maintainable CSS.
 
-## Flexbox ile Düzen
+## Flexbox Layout
 
-Flexbox, hızlı ve esnek düzenler oluşturmak için harika bir araçtır:
+Flexbox is a great tool for creating fast and flexible layouts:
 
 ```css
 .container {
@@ -21,7 +21,7 @@ Flexbox, hızlı ve esnek düzenler oluşturmak için harika bir araçtır:
 
 ## CSS Grid
 
-Karmaşık çok sütunlu düzenler için Grid kullanın:
+Use Grid for complex multi-column layouts:
 
 ```css
 .grid {
@@ -31,9 +31,9 @@ Karmaşık çok sütunlu düzenler için Grid kullanın:
 }
 ```
 
-## Responsive Tasarım
+## Responsive Design
 
-Mobil öncelikli yaklaşım kullanın:
+Use a mobile-first approach:
 
 ```css
 .card {
@@ -53,9 +53,9 @@ Mobil öncelikli yaklaşım kullanın:
 }
 ```
 
-## CSS Değişkenleri
+## CSS Variables
 
-Renk ve boyutları yönetmek için CSS değişkenleri kullanın:
+Use CSS variables to manage colors and sizes:
 
 ```css
 :root {
@@ -69,9 +69,9 @@ Renk ve boyutları yönetmek için CSS değişkenleri kullanın:
 }
 ```
 
-## BEM Metodolojisi
+## BEM Methodology
 
-Tutarlı ve anlaşılır sınıf adları için BEM kullanın:
+Use BEM for consistent and understandable class names:
 
 ```css
 .card { }
@@ -80,11 +80,11 @@ Tutarlı ve anlaşılır sınıf adları için BEM kullanın:
 .card--featured { }
 ```
 
-## Performans İpuçları
+## Performance Tips
 
-- Spesifik seçiciler yazın
-- Inline stilleri kullanmaktan kaçının
-- Gereksiz CSS kurallarını silin
-- Modern CSS özellikleri kullanın
+- Write specific selectors
+- Avoid using inline styles
+- Remove unnecessary CSS rules
+- Use modern CSS features
 
-CSS yazarken bu önerileri takip ederek daha kaliteli ve bakım edilebilir kod yazabilirsiniz.
+By following these recommendations when writing CSS, you can write higher quality and more maintainable code.

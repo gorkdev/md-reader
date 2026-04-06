@@ -1,32 +1,32 @@
-<!-- title: Toplantı Notları - Proje İlerleme -->
+<!-- title: Meeting Notes - Project Progress -->
 <!-- date: 2026-04-06 -->
 <!-- category: notes -->
 
-# Toplantı Notları - Proje İlerleme
+# Meeting Notes - Project Progress
 
-Bugün yapılan proje ilerleme toplantısında aşağıdaki konular ele alınmıştır:
+The following topics were discussed at today's project progress meeting:
 
-## Gündem
+## Agenda
 
-1. Frontend geliştirmesinin durumu
-2. Backend API integrasyonu
-3. Sonraki sprintin planlaması
-4. Ekip iş yükü dengesi
+1. Frontend development status
+2. Backend API integration
+3. Next sprint planning
+4. Team workload balance
 
-## Kararlar Alınan
+## Decisions Made
 
-- React 18 versiyonuna geçiş bu sprint içinde tamamlanacak
-- API endpoint'leri için OpenAPI dokümentasyonu hazırlanacak
-- Code review süreci daha katı hale getirilecek
+- React 18 version upgrade will be completed within this sprint
+- OpenAPI documentation will be prepared for API endpoints
+- Code review process will be made stricter
 
-## Aksiyon Maddeleri
+## Action Items
 
-| Sorumlular | Görev | Deadline |
+| Responsible | Task | Deadline |
 |-----------|-------|----------|
 | Ahmet | Redux state management refactor | 10.04.2026 |
 | Fatma | API documentation | 08.04.2026 |
 | Selim | Performance testing setup | 15.04.2026 |
 
-## Not
+## Note
 
-Gelecek hafta aynı saatte devam toplantısı yapılacak. Tüm takım üyeleri katılım sağlaması gerekiyor.
+Follow-up meeting will be held at the same time next week. All team members are required to attend.

@@ -1,72 +1,72 @@
-<!-- title: Git Kullanım Rehberi -->
+<!-- title: Git Usage Guide -->
 <!-- date: 2026-04-02 -->
 <!-- category: guides -->
 
-# Git Kullanım Rehberi
+# Git Usage Guide
 
-Git, sürüm kontrol sistemidir ve yazılım geliştirmede önemli bir rol oynar. Bu rehber temel Git komutlarını ve iş akışını açıklamaktadır.
+Git is a version control system and plays an important role in software development. This guide explains basic Git commands and workflow.
 
-## Git Nedir?
+## What is Git?
 
-Git, dosyalarınızın değişikliklerini takip eden dağıtık bir sürüm kontrol sistemidir. Takım çalışmasında ve proje yönetiminde temel araçtır.
+Git is a distributed version control system that tracks changes in your files. It is a fundamental tool in team collaboration and project management.
 
-## İlk Kurulum
+## Initial Setup
 
 ```bash
-git config --global user.name "Adınız"
+git config --global user.name "Your Name"
 git config --global user.email "email@example.com"
 ```
 
-## Temel Komutlar
+## Basic Commands
 
-### Depo Oluşturma
+### Creating a Repository
 
 ```bash
 git init
 ```
 
-### Değişiklikleri Staging Area'ya Ekleme
+### Adding Changes to Staging Area
 
 ```bash
 git add .
 ```
 
-### Commit Oluşturma
+### Creating a Commit
 
 ```bash
-git commit -m "Anlamlı bir commit mesajı"
+git commit -m "A meaningful commit message"
 ```
 
-### Değişiklikleri Uzak Sunucuya Gönderme
+### Pushing Changes to Remote Server
 
 ```bash
 git push origin main
 ```
 
-### Uzak Depodan Değişiklikleri Çekme
+### Pulling Changes from Remote Repository
 
 ```bash
 git pull origin main
 ```
 
-## Branch İş Akışı
+## Branch Workflow
 
 ```bash
-# Yeni branch oluşturma
-git branch feature/yeni-ozellik
+# Creating a new branch
+git branch feature/new-feature
 
-# Branch'e geçme
-git checkout feature/yeni-ozellik
+# Switching to a branch
+git checkout feature/new-feature
 
-# Branch'i silme
-git branch -d feature/yeni-ozellik
+# Deleting a branch
+git branch -d feature/new-feature
 ```
 
-## İyi Pratikler
+## Best Practices
 
-- Commit mesajlarını açık ve anlaşılır yazın
-- Küçük, mantıklı parçalar halinde commit yapın
-- Main branch'i doğrudan değiştirmeyin
-- Pull request kullanarak kod review'den geçirin
+- Write commit messages clearly and understandably
+- Commit in small, logical chunks
+- Do not modify the main branch directly
+- Use pull requests to go through code review
 
-Bu rehber Git kullanımının temelini kapsamaktadır.
+This guide covers the basics of Git usage.
