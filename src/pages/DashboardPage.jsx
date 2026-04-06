@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import {
-  AnimatedTabs,
+  Tabs,
   TabsList,
   TabsTrigger,
-  AnimatedTabsContent,
-  useRegisterTabs,
+  TabsContent,
 } from '@/components/ui/tabs'
 import {
   Table,
@@ -73,30 +72,12 @@ function FileTable({ files }) {
   )
 }
 
-function TabContent({ allFiles, categories, search }) {
-  const tabValues = useMemo(() => ['all', ...categories], [categories])
-  useRegisterTabs(tabValues)
-
-  const filterBySearch = (files) => {
-    if (!search) return files
-    const q = search.toLowerCase()
-    return files.filter(f =>
-      f.title.toLowerCase().includes(q) ||
-      f.fileName.toLowerCase().includes(q)
-    )
-  }
-
-  return (
-    <>
-      <AnimatedTabsContent value="all" className="m-0">
-        <FileTable files={filterBySearch(allFiles)} />
-      </AnimatedTabsContent>
-      {categories.map(cat => (
-        <AnimatedTabsContent key={cat} value={cat} className="m-0">
-          <FileTable files={filterBySearch(allFiles.filter(f => f.category === cat))} />
-        </AnimatedTabsContent>
-      ))}
-    </>
+function filterBySearch(files, search) {
+  if (!search) return files
+  const q = search.toLowerCase()
+  return files.filter(f =>
+    f.title.toLowerCase().includes(q) ||
+    f.fileName.toLowerCase().includes(q)
   )
 }
 
@@ -132,7 +113,7 @@ export default function DashboardPage() {
           />
         </div>
 
-        <AnimatedTabs defaultValue="all">
+        <Tabs defaultValue="all">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
             {categories.map(cat => (
@@ -143,9 +124,16 @@ export default function DashboardPage() {
           </TabsList>
 
           <div className="mt-4 border rounded-lg overflow-hidden">
-            <TabContent allFiles={allFiles} categories={categories} search={search} />
+            <TabsContent value="all" className="m-0">
+              <FileTable files={filterBySearch(allFiles, search)} />
+            </TabsContent>
+            {categories.map(cat => (
+              <TabsContent key={cat} value={cat} className="m-0">
+                <FileTable files={filterBySearch(allFiles.filter(f => f.category === cat), search)} />
+              </TabsContent>
+            ))}
           </div>
-        </AnimatedTabs>
+        </Tabs>
       </main>
     </div>
   )
