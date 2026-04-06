@@ -1,42 +1,53 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-function AnimatedGrid() {
+function FloatingPaths() {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Dot grid */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.15]">
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="1" r="1" fill="currentColor" />
-          </pattern>
+          <linearGradient id="line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="white" stopOpacity="0" />
+            <stop offset="50%" stopColor="white" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
+          </linearGradient>
         </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        {[
+          { d: "M-50 300 Q200 100 400 300 Q600 500 850 300", delay: '0s', dur: '20s' },
+          { d: "M-50 200 Q150 400 350 200 Q550 0 850 200", delay: '2s', dur: '22s' },
+          { d: "M-50 400 Q250 200 450 400 Q650 600 850 400", delay: '4s', dur: '18s' },
+          { d: "M-50 150 Q200 350 400 150 Q600 -50 850 150", delay: '1s', dur: '24s' },
+          { d: "M-50 450 Q300 250 500 450 Q700 650 850 450", delay: '3s', dur: '21s' },
+        ].map((line, i) => (
+          <g key={i}>
+            <path
+              d={line.d}
+              fill="none"
+              stroke="url(#line-grad)"
+              strokeWidth="0.5"
+              style={{
+                animation: `pathFloat ${line.dur} ease-in-out infinite`,
+                animationDelay: line.delay,
+              }}
+            />
+            <circle r="1.5" fill="white" fillOpacity="0.3">
+              <animateMotion
+                dur={line.dur}
+                repeatCount="indefinite"
+                path={line.d}
+                begin={line.delay}
+              />
+            </circle>
+          </g>
+        ))}
       </svg>
 
-      {/* Animated gradient sweep */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,255,255,0.06), transparent)',
-          animation: 'sweep 8s ease-in-out infinite',
-        }}
-      />
-
-      {/* Horizontal lines */}
-      <div className="absolute top-[30%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      <div className="absolute top-[60%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
-
-      {/* Vertical accent line */}
-      <div
-        className="absolute right-0 top-0 bottom-0 w-px"
-        style={{
-          background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.1) 60%, transparent)',
-        }}
-      />
+      {/* Subtle radial glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-white/[0.02] blur-[100px]" />
     </div>
   )
 }
@@ -66,117 +77,124 @@ export default function LoginPage() {
     if (success) {
       navigate('/')
     } else {
-      setError('Geçersiz kullanıcı adı veya şifre')
+      setError('Invalid username or password')
     }
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Sol panel */}
-      <div className="hidden lg:flex lg:w-[45%] bg-foreground text-background relative flex-col justify-between p-12 overflow-hidden">
-        <AnimatedGrid />
+    <div className="min-h-screen flex bg-foreground">
+      {/* Left panel - animated dark */}
+      <div className="hidden lg:flex lg:flex-1 relative flex-col justify-between p-10 text-background overflow-hidden">
+        <FloatingPaths />
 
         <div className="relative z-10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md border border-white/20 flex items-center justify-center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                <polyline points="14,2 14,8 20,8" />
-              </svg>
-            </div>
-            <span className="text-sm font-medium opacity-70">MD Reader</span>
-          </div>
+          <span className="text-sm font-medium opacity-50 tracking-wide">MD Reader</span>
         </div>
 
-        <div className="relative z-10 max-w-sm">
-          <h1 className="text-3xl font-semibold tracking-tight leading-[1.2] mb-3">
-            Markdown dosyalarınızı tek yerden yönetin.
+        <div className="relative z-10 max-w-lg">
+          <h1 className="text-5xl font-semibold tracking-tight leading-[1.1] mb-4 text-background">
+            Manage your
+            <br />
+            markdown files,
+            <br />
+            <span className="opacity-40">effortlessly.</span>
           </h1>
-          <p className="text-sm leading-relaxed opacity-40">
-            Yerel dosyalarınızı okuyun, düzenleyin ve kategorilere göre filtreleyin. Basit, hızlı, verimli.
-          </p>
         </div>
 
-        <div className="relative z-10 flex items-center gap-6 text-xs opacity-30">
-          <span>Hızlı</span>
-          <span className="w-1 h-1 rounded-full bg-current" />
-          <span>Güvenli</span>
-          <span className="w-1 h-1 rounded-full bg-current" />
-          <span>Yerel</span>
+        <div className="relative z-10 flex items-center gap-5 text-xs opacity-25">
+          <span>Fast</span>
+          <span className="w-px h-3 bg-current" />
+          <span>Secure</span>
+          <span className="w-px h-3 bg-current" />
+          <span>Local</span>
         </div>
       </div>
 
-      {/* Sağ panel */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-background relative">
-        {/* Mobil logo */}
-        <div className="absolute top-6 left-6 lg:hidden">
+      {/* Right panel - form */}
+      <div className="w-full lg:w-[420px] flex flex-col bg-background lg:rounded-l-2xl relative">
+        {/* Mobile header */}
+        <div className="p-6 lg:hidden">
           <span className="text-sm font-semibold">MD Reader</span>
         </div>
 
+        <div className="flex-1 flex items-center justify-center px-10">
+          <div
+            className="w-full max-w-[340px] transition-all duration-700 ease-out"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateY(0)' : 'translateY(12px)',
+            }}
+          >
+            <div className="mb-10">
+              <h2 className="text-2xl font-semibold tracking-tight mb-2">Welcome back</h2>
+              <p className="text-sm text-muted-foreground">Sign in to continue</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div
+                className="space-y-2 transition-all duration-700 ease-out"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(12px)',
+                  transitionDelay: '80ms',
+                }}
+              >
+                <label className="text-sm font-medium">Username</label>
+                <Input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="h-11"
+                  required
+                />
+              </div>
+
+              <div
+                className="space-y-2 transition-all duration-700 ease-out"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(12px)',
+                  transitionDelay: '160ms',
+                }}
+              >
+                <label className="text-sm font-medium">Password</label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-11"
+                  required
+                />
+              </div>
+
+              {error && <p className="text-sm text-destructive">{error}</p>}
+
+              <div
+                className="pt-1 transition-all duration-700 ease-out"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(12px)',
+                  transitionDelay: '240ms',
+                }}
+              >
+                <Button type="submit" className="w-full h-11">
+                  Sign In
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+
         <div
-          className="w-full max-w-[320px] transition-all duration-500 ease-out"
+          className="p-6 text-center transition-all duration-700 ease-out"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(8px)',
+            transitionDelay: '400ms',
           }}
         >
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold tracking-tight mb-1">Hoş geldiniz</h2>
-            <p className="text-sm text-muted-foreground">Devam etmek için giriş yapın</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div
-              className="space-y-1.5 transition-all duration-500 ease-out"
-              style={{
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(8px)',
-                transitionDelay: '100ms',
-              }}
-            >
-              <label className="text-sm font-medium">Kullanıcı Adı</label>
-              <Input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="h-10"
-                required
-              />
-            </div>
-
-            <div
-              className="space-y-1.5 transition-all duration-500 ease-out"
-              style={{
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(8px)',
-                transitionDelay: '200ms',
-              }}
-            >
-              <label className="text-sm font-medium">Şifre</label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-10"
-                required
-              />
-            </div>
-
-            {error && <p className="text-sm text-destructive">{error}</p>}
-
-            <div
-              className="transition-all duration-500 ease-out"
-              style={{
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(8px)',
-                transitionDelay: '300ms',
-              }}
-            >
-              <Button type="submit" className="w-full h-10">
-                Giriş Yap
-              </Button>
-            </div>
-          </form>
+          <p className="text-xs text-muted-foreground">
+            Default credentials: admin / admin123
+          </p>
         </div>
       </div>
     </div>

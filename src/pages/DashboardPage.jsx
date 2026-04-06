@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { loadMarkdownFiles } from '@/lib/mdLoader'
 import { Button } from '@/components/ui/button'
@@ -21,17 +21,17 @@ import {
 } from '@/components/ui/table'
 
 const CATEGORY_LABELS = {
-  notes: 'Notlar',
-  guides: 'Rehberler',
-  logs: 'Loglar',
-  ideas: 'Fikirler',
+  notes: 'Notes',
+  guides: 'Guides',
+  logs: 'Logs',
+  ideas: 'Ideas',
 }
 
 function FileTable({ files }) {
   if (files.length === 0) {
     return (
       <div className="py-16 text-center text-sm text-muted-foreground">
-        Dosya bulunamadı
+        No files found
       </div>
     )
   }
@@ -40,10 +40,10 @@ function FileTable({ files }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Başlık</TableHead>
-          <TableHead>Kategori</TableHead>
-          <TableHead>Tarih</TableHead>
-          <TableHead className="text-right">Kelime</TableHead>
+          <TableHead>Title</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead>Date</TableHead>
+          <TableHead className="text-right">Words</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -64,7 +64,7 @@ function FileTable({ files }) {
               {file.date}
             </TableCell>
             <TableCell className="text-right text-muted-foreground tabular-nums">
-              {file.wordCount.toLocaleString('tr-TR')}
+              {file.wordCount.toLocaleString('en-US')}
             </TableCell>
           </TableRow>
         ))}
@@ -117,7 +117,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">{user?.username}</span>
             <Button variant="ghost" size="sm" onClick={logout}>
-              Çıkış
+              Sign Out
             </Button>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
       <main className="max-w-5xl mx-auto px-6 py-8">
         <div className="mb-6 max-w-sm">
           <Input
-            placeholder="Ara..."
+            placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -134,7 +134,7 @@ export default function DashboardPage() {
 
         <AnimatedTabs defaultValue="all">
           <TabsList>
-            <TabsTrigger value="all">Tümü</TabsTrigger>
+            <TabsTrigger value="all">All</TabsTrigger>
             {categories.map(cat => (
               <TabsTrigger key={cat} value={cat}>
                 {CATEGORY_LABELS[cat] || cat}
