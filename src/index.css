@@ -127,3 +127,19 @@
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
 }
+
+@keyframes tableRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@theme inline {
+  --container-3xl: 1280px;
+  --container-2xl: 1280px;
+}

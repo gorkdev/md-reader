@@ -1,5 +1,4 @@
 import * as React from "react"
-import { cva } from "class-variance-authority"
 import { Tabs as TabsPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
@@ -85,61 +84,6 @@ function TabsTrigger({
   );
 }
 
-const TabsContext = React.createContext({ direction: 0 })
-
-function AnimatedTabs({ className, onValueChange, ...props }) {
-  const [tabOrder, setTabOrder] = React.useState([])
-  const [direction, setDirection] = React.useState(0)
-  const prevIndexRef = React.useRef(0)
-
-  const handleValueChange = React.useCallback((value) => {
-    const newIndex = tabOrder.indexOf(value)
-    const prevIndex = prevIndexRef.current
-    if (newIndex !== -1) {
-      setDirection(newIndex > prevIndex ? 1 : -1)
-      prevIndexRef.current = newIndex
-    }
-    onValueChange?.(value)
-  }, [tabOrder, onValueChange])
-
-  return (
-    <TabsContext.Provider value={{ direction, setTabOrder }}>
-      <Tabs
-        className={className}
-        onValueChange={handleValueChange}
-        {...props}
-      />
-    </TabsContext.Provider>
-  )
-}
-
-function AnimatedTabsContent({
-  className,
-  ...props
-}) {
-  const { direction } = React.useContext(TabsContext)
-
-  return (
-    <TabsPrimitive.Content
-      data-slot="tabs-content"
-      className={cn(
-        "flex-1 outline-none overflow-hidden",
-        direction >= 0
-          ? "data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-200"
-          : "data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-left-4 data-[state=active]:duration-200",
-        className
-      )}
-      {...props} />
-  );
-}
-
-function useRegisterTabs(values) {
-  const { setTabOrder } = React.useContext(TabsContext)
-  React.useEffect(() => {
-    setTabOrder?.(values)
-  }, [values, setTabOrder])
-}
-
 function TabsContent({
   className,
   ...props
@@ -147,17 +91,13 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
+      className={cn(
+        "flex-1 outline-none",
+        "data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:duration-150",
+        className
+      )}
       {...props} />
   );
 }
 
-export {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-  AnimatedTabs,
-  AnimatedTabsContent,
-  useRegisterTabs,
-}
+export { Tabs, TabsList, TabsTrigger, TabsContent }
