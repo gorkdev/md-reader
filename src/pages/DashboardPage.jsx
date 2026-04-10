@@ -1,7 +1,20 @@
 import { useState, useMemo, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { loadMarkdownFiles } from '@/lib/mdLoader'
+import { useSocket } from '@/contexts/SocketContext'
+import { api } from '@/lib/api'
+import LockBadge from '@/components/LockBadge'
+import PresenceIndicator from '@/components/PresenceIndicator'
+import NewFileDialog from '@/components/NewFileDialog'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -30,7 +43,7 @@ function filterBySearch(files, search) {
   )
 }
 
-function FileTable({ files }) {
+function FileTable({ files, onRowClick }) {
   if (files.length === 0) {
     return (
       <div className="py-20 text-center text-sm text-muted-foreground">
@@ -54,15 +67,19 @@ function FileTable({ files }) {
           <TableRow
             key={file.id}
             className="cursor-pointer group"
+            onClick={() => onRowClick?.(file)}
             style={{
               animation: 'tableRowIn 0.3s ease-out both',
               animationDelay: `${i * 30}ms`,
             }}
           >
             <TableCell>
-              <div>
-                <p className="font-medium group-hover:text-foreground transition-colors">{file.title}</p>
-                <p className="text-xs text-muted-foreground">{file.fileName}</p>
+              <div className="flex items-center gap-2">
+                <div>
+                  <p className="font-medium group-hover:text-foreground transition-colors">{file.title}</p>
+                  <p className="text-xs text-muted-foreground">{file.fileName}</p>
+                </div>
+                {file.lock && <LockBadge holder={file.lock} />}
               </div>
             </TableCell>
             <TableCell>
@@ -85,9 +102,44 @@ function FileTable({ files }) {
 
 export default function DashboardPage() {
   const { user, logout } = useAuth()
-  const allFiles = useMemo(() => loadMarkdownFiles(), [])
+  const { on, presence } = useSocket()
+  const navigate = useNavigate()
+  const [allFiles, setAllFiles] = useState([])
+  const [loadingFiles, setLoadingFiles] = useState(true)
   const [search, setSearch] = useState('')
   const [mounted, setMounted] = useState(false)
+  const [logoutOpen, setLogoutOpen] = useState(false)
+
+  const refresh = () => {
+    api.get('/api/files').then(data => setAllFiles(data.files)).catch(() => {})
+  }
+
+  useEffect(() => {
+    let active = true
+    api.get('/api/files')
+      .then(data => { if (active) setAllFiles(data.files) })
+      .catch(() => {})
+      .finally(() => { if (active) setLoadingFiles(false) })
+    return () => { active = false }
+  }, [])
+
+  // Realtime subscriptions
+  useEffect(() => {
+    const offCreated = on('file:created', refresh)
+    const offUpdated = on('file:updated', refresh)
+    const offDeleted = on('file:deleted', ({ id }) => {
+      setAllFiles(prev => prev.filter(f => f.id !== id))
+    })
+    const offLockAcquired = on('lock:acquired', ({ path, holder }) => {
+      setAllFiles(prev => prev.map(f => f.path === path ? { ...f, lock: holder } : f))
+    })
+    const offLockReleased = on('lock:released', ({ path }) => {
+      setAllFiles(prev => prev.map(f => f.path === path ? { ...f, lock: null } : f))
+    })
+    return () => {
+      offCreated(); offUpdated(); offDeleted(); offLockAcquired(); offLockReleased()
+    }
+  }, [on])
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 50)
@@ -98,7 +150,7 @@ export default function DashboardPage() {
     return [...new Set(allFiles.map(f => f.category))]
   }, [allFiles])
 
-  const initial = user?.username?.charAt(0)?.toUpperCase() || 'U'
+  const initial = user?.displayName?.charAt(0)?.toUpperCase() || user?.username?.charAt(0)?.toUpperCase() || 'U'
 
   return (
     <div className="min-h-screen bg-background">
@@ -107,19 +159,42 @@ export default function DashboardPage() {
         <div className="container mx-auto px-6 h-14 flex items-center justify-between">
           <span className="font-semibold">MD Reader</span>
           <div className="flex items-center gap-3">
+            {user?.role && user.role !== 'viewer' && (
+              <NewFileDialog onCreated={refresh}>
+                <Button size="sm" variant="outline">+ Yeni</Button>
+              </NewFileDialog>
+            )}
+            <PresenceIndicator users={presence} />
+            <div className="w-px h-4 bg-border" />
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold">
                 {initial}
               </div>
-              <span className="text-sm font-medium capitalize">{user?.username}</span>
+              <span className="text-sm font-medium">{user?.displayName || user?.username}</span>
             </div>
             <div className="w-px h-4 bg-border" />
-            <span
-              className="text-sm text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
-              onClick={logout}
-            >
+            <Button size="xs" variant="destructive" onClick={() => setLogoutOpen(true)}>
               Çıkış Yap
-            </span>
+            </Button>
+
+            <Dialog open={logoutOpen} onOpenChange={setLogoutOpen}>
+              <DialogContent className="max-w-xs">
+                <DialogHeader>
+                  <DialogTitle>Çıkış Yap</DialogTitle>
+                  <DialogDescription>
+                    Oturumunuz sonlandırılacak. Devam etmek istiyor musunuz?
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button size="sm" variant="outline" onClick={() => setLogoutOpen(false)}>
+                    Vazgeç
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={logout}>
+                    Çıkış Yap
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </header>
@@ -135,7 +210,7 @@ export default function DashboardPage() {
         >
           <h1 className="text-2xl font-semibold tracking-tight mb-1">Files</h1>
           <p className="text-sm text-muted-foreground">
-            {allFiles.length} markdown files across {categories.length} categories
+            {loadingFiles ? 'Yükleniyor...' : `${allFiles.length} markdown files across ${categories.length} categories`}
           </p>
         </div>
 
@@ -176,11 +251,14 @@ export default function DashboardPage() {
             }}
           >
             <TabsContent value="all" className="m-0">
-              <FileTable files={filterBySearch(allFiles, search)} />
+              <FileTable files={filterBySearch(allFiles, search)} onRowClick={file => navigate(`/file/${file.id}`)} />
             </TabsContent>
             {categories.map(cat => (
               <TabsContent key={cat} value={cat} className="m-0">
-                <FileTable files={filterBySearch(allFiles.filter(f => f.category === cat), search)} />
+                <FileTable
+                  files={filterBySearch(allFiles.filter(f => f.category === cat), search)}
+                  onRowClick={file => navigate(`/file/${file.id}`)}
+                />
               </TabsContent>
             ))}
           </div>

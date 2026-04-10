@@ -1,47 +1,49 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { api, getToken, setToken } from '@/lib/api'
 
 const AuthContext = createContext(null)
 
-const VALID_USER = { username: 'admin', password: 'admin123' }
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const stored = localStorage.getItem('md-reader-auth')
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored))
-      } catch {
-        localStorage.removeItem('md-reader-auth')
-      }
+    const token = getToken()
+    if (!token) {
+      setLoading(false)
+      return
+    }
+    api.get('/api/auth/me')
+      .then(data => setUser(data.user))
+      .catch(() => setToken(null))
+      .finally(() => setLoading(false))
+  }, [])
+
+  const login = useCallback(async (username, password) => {
+    try {
+      const data = await api.post('/api/auth/login', { username, password })
+      setToken(data.token)
+      setUser(data.user)
+      return { ok: true }
+    } catch (e) {
+      return { ok: false, error: e.data?.error || e.message || 'Login failed' }
     }
   }, [])
 
-  const login = (username, password) => {
-    if (username === VALID_USER.username && password === VALID_USER.password) {
-      const userData = { username }
-      setUser(userData)
-      localStorage.setItem('md-reader-auth', JSON.stringify(userData))
-      return true
-    }
-    return false
-  }
-
-  const logout = () => {
+  const logout = useCallback(() => {
+    setToken(null)
     setUser(null)
-    localStorage.removeItem('md-reader-auth')
-  }
+  }, [])
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
-  if (!context) throw new Error('useAuth must be used within AuthProvider')
-  return context
+  const ctx = useContext(AuthContext)
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
+  return ctx
 }

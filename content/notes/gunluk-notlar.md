@@ -18,10 +18,11 @@ I worked on test writing again in the evening. I added jest snapshot tests to in
 
 ## To-Do List
 
-- [ ] Complete integration tests
-- [ ] Update deployment guide
-- [ ] Review technical documentation
-- [ ] Provide code reviews to team members
+<!-- düzenleyen: Gorkem — 10/04/2026 22:05 -->
+* [ ] Complete integration tests
+* [ ] Update deployment guide
+* [ ] Review technical documentation
+* [ ] Provide code reviews to team members
 
 ## Note
 

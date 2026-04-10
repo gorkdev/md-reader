@@ -1,5 +1,207 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+/* Prevent Radix Dialog scroll-lock from hiding the scrollbar and causing
+   a horizontal layout shift when modals open. The !important overrides
+   the inline styles injected by react-remove-scroll. */
+html, body {
+  overflow-y: scroll !important;
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* MDXEditor — match shadcn dark theme */
+.mdx-shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.mdx-shell .mdxeditor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  font-family: inherit;
+}
+
+.mdx-shell .mdxeditor-toolbar {
+  background: color-mix(in srgb, var(--muted) 30%, transparent);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.5rem;
+  flex-shrink: 0;
+}
+
+.mdx-shell .mdxeditor-root-contenteditable {
+  flex: 1;
+  overflow: auto;
+  background: transparent;
+}
+
+.mdx-shell .mdx-content-editable {
+  padding: 1.5rem 2rem;
+  min-height: 100%;
+  outline: none;
+  color: var(--foreground);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.mdx-shell .mdx-content-editable h1 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+  letter-spacing: -0.02em;
+}
+.mdx-shell .mdx-content-editable h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.625rem;
+  letter-spacing: -0.015em;
+}
+.mdx-shell .mdx-content-editable h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+}
+.mdx-shell .mdx-content-editable p {
+  margin: 0.5rem 0;
+}
+.mdx-shell .mdx-content-editable ul,
+.mdx-shell .mdx-content-editable ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+.mdx-shell .mdx-content-editable li {
+  margin: 0.25rem 0;
+}
+/* Task list (todo) — checkbox + text vertical alignment */
+.mdx-shell .mdx-content-editable li[role="checkbox"],
+.mdx-shell .mdx-content-editable li:has(> input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  line-height: 1;
+}
+.mdx-shell .mdx-content-editable li > input[type="checkbox"] {
+  margin: 0;
+  flex-shrink: 0;
+}
+.mdx-shell .mdx-content-editable li[role="checkbox"] > span,
+.mdx-shell .mdx-content-editable li:has(> input[type="checkbox"]) > span,
+.mdx-shell .mdx-content-editable li:has(> input[type="checkbox"]) > p {
+  margin: 0;
+  line-height: 1;
+}
+.mdx-shell .mdx-content-editable blockquote {
+  border-left: 3px solid var(--border);
+  padding-left: 1rem;
+  margin: 0.75rem 0;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  font-style: italic;
+}
+.mdx-shell .mdx-content-editable code {
+  background: var(--muted);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+}
+.mdx-shell .mdx-content-editable pre {
+  background: var(--muted);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+.mdx-shell .mdx-content-editable a {
+  color: #60a5fa;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.mdx-shell .mdx-content-editable hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+/* MDXEditor toolbar buttons */
+.mdx-shell .mdxeditor-toolbar [role="button"],
+.mdx-shell .mdxeditor-toolbar button {
+  color: var(--muted-foreground);
+  border-radius: 0.375rem;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.mdx-shell .mdxeditor-toolbar [role="button"]:hover,
+.mdx-shell .mdxeditor-toolbar button:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+.mdx-shell .mdxeditor-toolbar [data-state="on"] {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Toolbar separator */
+.mdx-shell .mdxeditor-toolbar [data-orientation="vertical"] {
+  background: var(--border);
+  width: 1px;
+  margin: 0 0.25rem;
+  opacity: 0.5;
+}
+
+/* MDXEditor internal popups & dropdowns */
+.mdx-shell .mdxeditor-popup-container,
+.mdx-shell .mdxeditor-select-content,
+.mdx-shell [data-radix-popper-content-wrapper] {
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* MDXEditor dialog inputs (e.g. link dialog) */
+.mdx-shell .mdxeditor-popup-container input {
+  background: var(--muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.8125rem;
+  transition: border-color 0.2s ease;
+}
+.mdx-shell .mdxeditor-popup-container input:focus {
+  outline: none;
+  border-color: var(--ring);
+}
+.mdx-shell .mdxeditor-popup-container button {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+.mdx-shell .mdxeditor-popup-container button:hover {
+  opacity: 0.85;
+}
+
+/* Prose task list — override typography plugin for task items */
+.prose .contains-task-list {
+  padding-left: 0 !important;
+}
+.prose .contains-task-list p {
+  margin: 0 !important;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -117,8 +319,8 @@
   * {
     @apply border-border;
   }
-  html {
-    overflow-y: scroll;
+  button, [role="button"], a, select, summary, [type="button"], [type="submit"], [type="reset"] {
+    cursor: pointer;
   }
   body {
     @apply bg-background text-foreground antialiased;
@@ -134,17 +336,17 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.8 0 0);
+  background: oklch(0.35 0 0);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.65 0 0);
+  background: oklch(0.45 0 0);
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: oklch(0.8 0 0) transparent;
+  scrollbar-color: oklch(0.35 0 0) transparent;
 }
 
 @keyframes pathFloat {

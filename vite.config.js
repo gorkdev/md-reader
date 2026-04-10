@@ -10,4 +10,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': 'http://localhost:3001',
+      '/socket.io': {
+        target: 'http://localhost:3001',
+        ws: true,
+      },
+    },
+  },
 })

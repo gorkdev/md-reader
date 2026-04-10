@@ -50,9 +50,10 @@ function FloatingPaths() {
 }
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('admin')
-  const [password, setPassword] = useState('admin123')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const [visible, setVisible] = useState(false)
   const { login, isAuthenticated } = useAuth()
   const navigate = useNavigate()
@@ -62,19 +63,25 @@ export default function LoginPage() {
     return () => clearTimeout(t)
   }, [])
 
-  if (isAuthenticated) {
-    navigate('/', { replace: true })
-    return null
-  }
+  useEffect(() => {
+    if (isAuthenticated) navigate('/', { replace: true })
+  }, [isAuthenticated, navigate])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
-    const success = login(username, password)
-    if (success) {
+    setSubmitting(true)
+    const result = await login(username, password)
+    setSubmitting(false)
+    if (result.ok) {
       navigate('/')
     } else {
-      setError('Invalid username or password')
+      const raw = result.error || ''
+      const friendly =
+        raw === 'Invalid credentials' ? 'Kullanıcı adı veya şifre hatalı'
+        : raw === 'Username and password required' ? 'Kullanıcı adı ve şifre gerekli'
+        : raw || 'Giriş başarısız'
+      setError(friendly)
     }
   }
 
@@ -161,7 +168,12 @@ export default function LoginPage() {
                 />
               </div>
 
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {error && (
+                <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive flex items-start gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <span className="leading-5">⚠</span>
+                  <span className="leading-5">{error}</span>
+                </div>
+              )}
 
               <div
                 className="pt-1 transition-all duration-700 ease-out"
@@ -171,8 +183,8 @@ export default function LoginPage() {
                   transitionDelay: '240ms',
                 }}
               >
-                <Button type="submit" className="w-full">
-                  Sign In
+                <Button type="submit" className="w-full" disabled={submitting}>
+                  {submitting ? 'Signing in...' : 'Sign In'}
                 </Button>
               </div>
             </form>
@@ -183,7 +195,7 @@ export default function LoginPage() {
           className="p-6 text-center transition-all duration-700 ease-out"
           style={{ opacity: visible ? 1 : 0, transitionDelay: '400ms' }}
         >
-          <p className="text-xs text-muted-foreground">admin / admin123</p>
+          <p className="text-xs text-muted-foreground">Multi-user collaborative editing</p>
         </div>
       </div>
     </div>
