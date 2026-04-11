@@ -33,7 +33,7 @@ export default function PresenceIndicator({ users }) {
           ) : (
             <>
               <span className="h-2 w-2 rounded-full bg-zinc-400" />
-              <span className="text-muted-foreground">Çevrimdışı</span>
+              <span className="text-muted-foreground">Offline</span>
             </>
           )}
         </button>
@@ -68,7 +68,7 @@ export default function PresenceIndicator({ users }) {
           </ul>
         ) : (
           <div className="px-3 py-6 text-center text-sm text-muted-foreground">
-            Şu an kimse online değil
+            No one is online
           </div>
         )}
       </PopoverContent>

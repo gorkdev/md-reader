@@ -31,11 +31,11 @@ export default function NewFileDialog({ onCreated, children }) {
   const handleCreate = async () => {
     let finalName = fileName.trim()
     if (!finalName) {
-      const slug = slugify(title.trim() || 'yeni-dosya')
-      finalName = `${slug || 'yeni-dosya'}.md`
+      const slug = slugify(title.trim() || 'new-file')
+      finalName = `${slug || 'new-file'}.md`
     }
     if (!finalName.endsWith('.md')) {
-      toast.error('Dosya adı .md ile bitmeli')
+      toast.error('File name must end with .md')
       return
     }
     try {
@@ -45,7 +45,7 @@ export default function NewFileDialog({ onCreated, children }) {
         fileName: finalName,
         title: title.trim() || finalName.replace('.md', ''),
       })
-      toast.success('Dosya oluşturuldu')
+      toast.success('File created')
       setOpen(false)
       setTitle('')
       setFileName('')
@@ -62,15 +62,15 @@ export default function NewFileDialog({ onCreated, children }) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Yeni dosya</DialogTitle>
-          <DialogDescription>Yeni bir markdown dosyası oluştur.</DialogDescription>
+          <DialogTitle>New file</DialogTitle>
+          <DialogDescription>Create a new markdown file.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <label className="text-xs text-muted-foreground">Kategori</label>
+            <label className="text-xs text-muted-foreground">Category</label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="mt-1">
-                <SelectValue placeholder="Kategori seç" />
+                <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
                 {CATEGORIES.map(c => (
@@ -82,18 +82,18 @@ export default function NewFileDialog({ onCreated, children }) {
             </Select>
           </div>
           <div>
-            <label className="text-xs text-muted-foreground">Başlık</label>
-            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Dosya başlığı" className="mt-1" />
+            <label className="text-xs text-muted-foreground">Title</label>
+            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="File title" className="mt-1" />
           </div>
           <div>
-            <label className="text-xs text-muted-foreground">Dosya adı (opsiyonel)</label>
-            <Input value={fileName} onChange={e => setFileName(e.target.value)} placeholder="not-001.md" className="mt-1" />
+            <label className="text-xs text-muted-foreground">File name (optional)</label>
+            <Input value={fileName} onChange={e => setFileName(e.target.value)} placeholder="note-001.md" className="mt-1" />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Vazgeç</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
           <Button onClick={handleCreate} disabled={saving}>
-            {saving ? 'Oluşturuluyor...' : 'Oluştur'}
+            {saving ? 'Creating...' : 'Create'}
           </Button>
         </DialogFooter>
       </DialogContent>

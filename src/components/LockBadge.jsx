@@ -14,7 +14,7 @@ export default function LockBadge({ holder, className = '' }) {
         backgroundColor: color.bg,
         color: color.text,
       }}
-      title={`Düzenleniyor: ${holder.displayName}`}
+      title={`Editing: ${holder.displayName}`}
     >
       <span className="relative flex h-1.5 w-1.5">
         <span
@@ -26,7 +26,7 @@ export default function LockBadge({ holder, className = '' }) {
           style={{ backgroundColor: color.dot }}
         />
       </span>
-      {holder.displayName} düzenliyor
+      {holder.displayName} editing
     </span>
   )
 }

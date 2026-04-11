@@ -11,14 +11,14 @@ import {
 } from '@/components/ui/select'
 
 const BLOCK_TYPES = [
-  { value: 'paragraph', label: 'Paragraf' },
-  { value: 'h1', label: 'Başlık 1' },
-  { value: 'h2', label: 'Başlık 2' },
-  { value: 'h3', label: 'Başlık 3' },
-  { value: 'h4', label: 'Başlık 4' },
-  { value: 'h5', label: 'Başlık 5' },
-  { value: 'h6', label: 'Başlık 6' },
-  { value: 'quote', label: 'Alıntı' },
+  { value: 'paragraph', label: 'Paragraph' },
+  { value: 'h1', label: 'Heading 1' },
+  { value: 'h2', label: 'Heading 2' },
+  { value: 'h3', label: 'Heading 3' },
+  { value: 'h4', label: 'Heading 4' },
+  { value: 'h5', label: 'Heading 5' },
+  { value: 'h6', label: 'Heading 6' },
+  { value: 'quote', label: 'Quote' },
 ]
 
 export default function BlockTypeSelectToolbar() {

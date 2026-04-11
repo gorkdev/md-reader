@@ -20,14 +20,14 @@ import {
 } from '@/components/ui/select'
 
 const COLORS = [
-  { name: 'Mavi', value: '#60a5fa' },
-  { name: 'Yeşil', value: '#4ade80' },
-  { name: 'Turuncu', value: '#fb923c' },
-  { name: 'Pembe', value: '#f472b6' },
-  { name: 'Sarı', value: '#facc15' },
-  { name: 'Turkuaz', value: '#2dd4bf' },
-  { name: 'Mor', value: '#a78bfa' },
-  { name: 'Kırmızı', value: '#f87171' },
+  { name: 'Blue', value: '#60a5fa' },
+  { name: 'Green', value: '#4ade80' },
+  { name: 'Orange', value: '#fb923c' },
+  { name: 'Pink', value: '#f472b6' },
+  { name: 'Yellow', value: '#facc15' },
+  { name: 'Teal', value: '#2dd4bf' },
+  { name: 'Purple', value: '#a78bfa' },
+  { name: 'Red', value: '#f87171' },
 ]
 
 export default function CreateUserDialog({ children }) {
@@ -54,7 +54,7 @@ export default function CreateUserDialog({ children }) {
     try {
       setSubmitting(true)
       const data = await api.post('/api/users', { username, displayName, password, role, color })
-      toast.success(`${data.user.displayName} oluşturuldu`)
+      toast.success(`${data.user.displayName} created`)
       reset()
       setOpen(false)
     } catch (err) {
@@ -69,46 +69,46 @@ export default function CreateUserDialog({ children }) {
       <span onClick={() => setOpen(true)}>{children}</span>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Kullanıcı Oluştur</DialogTitle>
-          <DialogDescription>Yeni bir kullanıcı hesabı oluşturun.</DialogDescription>
+          <DialogTitle>Create User</DialogTitle>
+          <DialogDescription>Create a new user account.</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-muted-foreground">Kullanıcı Adı</label>
+            <label className="text-xs font-medium text-muted-foreground">Username</label>
             <Input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="ornek"
+              placeholder="johndoe"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-muted-foreground">Görünen Ad</label>
+            <label className="text-xs font-medium text-muted-foreground">Display Name</label>
             <Input
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="Örnek Kullanıcı"
+              placeholder="John Doe"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-muted-foreground">Şifre</label>
+            <label className="text-xs font-medium text-muted-foreground">Password</label>
             <Input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="En az 4 karakter"
+              placeholder="Min 8 characters"
               required
-              minLength={4}
+              minLength={8}
             />
           </div>
 
           <div className="flex gap-3">
             <div className="flex-1 space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Rol</label>
+              <label className="text-xs font-medium text-muted-foreground">Role</label>
               <Select value={role} onValueChange={setRole}>
                 <SelectTrigger>
                   <SelectValue />
@@ -122,7 +122,7 @@ export default function CreateUserDialog({ children }) {
             </div>
 
             <div className="flex-1 space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Renk</label>
+              <label className="text-xs font-medium text-muted-foreground">Color</label>
               <Select value={color} onValueChange={setColor}>
                 <SelectTrigger>
                   <div className="flex items-center gap-2">
@@ -152,10 +152,10 @@ export default function CreateUserDialog({ children }) {
 
           <DialogFooter>
             <Button type="button" size="sm" variant="outline" onClick={() => setOpen(false)}>
-              Vazgeç
+              Cancel
             </Button>
             <Button type="submit" size="sm" disabled={submitting}>
-              {submitting ? 'Oluşturuluyor...' : 'Oluştur'}
+              {submitting ? 'Creating...' : 'Create'}
             </Button>
           </DialogFooter>
         </form>

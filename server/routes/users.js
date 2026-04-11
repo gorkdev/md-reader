@@ -25,7 +25,7 @@ router.post('/', requireRole('admin'), async (req, res, next) => {
       return res.status(400).json({ error: 'username, displayName, and password are required' })
     }
     if (password.length < 8) {
-      return res.status(400).json({ error: 'Şifre en az 8 karakter olmalı' })
+      return res.status(400).json({ error: 'Password must be at least 8 characters' })
     }
     const user = await createUser({ username, displayName, password, role: role || 'editor', color })
     res.status(201).json({ user })

@@ -64,7 +64,7 @@ router.get('/:id', async (req, res, next) => {
     // Fill null entries with a fallback based on file metadata.
     const contentLineCount = file.bodyClean.split('\n').length
     const fallback = {
-      user: file.frontmatter?.author || 'Bilinmiyor',
+      user: file.frontmatter?.author || 'Unknown',
       userId: null,
       username: null,
       hue: getUserHue(file.frontmatter?.author || ''),

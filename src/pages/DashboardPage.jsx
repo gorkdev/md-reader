@@ -194,19 +194,19 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             {user?.role === 'admin' && (
               <CreateUserDialog>
-                <Button size="sm" variant="outline">+ Kullanıcı</Button>
+                <Button size="sm" variant="outline">+ User</Button>
               </CreateUserDialog>
             )}
             {user?.role && user.role !== 'viewer' && (
               <NewFileDialog onCreated={refresh}>
-                <Button size="sm" variant="outline">+ Yeni</Button>
+                <Button size="sm" variant="outline">+ New</Button>
               </NewFileDialog>
             )}
             <PresenceIndicator users={presence} />
             <button
               onClick={toggleTheme}
               className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-              title={theme === 'dark' ? 'Açık mod' : 'Koyu mod'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
             >
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
@@ -219,23 +219,23 @@ export default function DashboardPage() {
             </div>
             <div className="w-px h-4 bg-border" />
             <Button size="xs" variant="destructive" onClick={() => setLogoutOpen(true)}>
-              Çıkış Yap
+              Log Out
             </Button>
 
             <Dialog open={logoutOpen} onOpenChange={setLogoutOpen}>
               <DialogContent className="max-w-xs">
                 <DialogHeader>
-                  <DialogTitle>Çıkış Yap</DialogTitle>
+                  <DialogTitle>Log Out</DialogTitle>
                   <DialogDescription>
-                    Oturumunuz sonlandırılacak. Devam etmek istiyor musunuz?
+                    Your session will be terminated. Do you want to continue?
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                   <Button size="sm" variant="outline" onClick={() => setLogoutOpen(false)}>
-                    Vazgeç
+                    Cancel
                   </Button>
                   <Button size="sm" variant="destructive" onClick={logout}>
-                    Çıkış Yap
+                    Log Out
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
         <div className="mb-6 shrink-0" style={dashAnim(0)}>
           <h1 className="text-2xl font-semibold tracking-tight mb-1">Files</h1>
           <p className="text-sm text-muted-foreground">
-            {loadingFiles ? 'Yükleniyor...' : `${allFiles.length} markdown files across ${categories.length} categories`}
+            {loadingFiles ? 'Loading...' : `${allFiles.length} markdown files across ${categories.length} categories`}
           </p>
         </div>
 

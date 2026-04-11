@@ -34,7 +34,7 @@ async function main() {
 
     const password = await ask(rl, '  Password (visible): ')
     if (!password) throw new Error('Password required')
-    if (password.length < 4) throw new Error('Password too short (min 4 chars)')
+    if (password.length < 8) throw new Error('Password too short (min 8 chars)')
 
     const confirm = await ask(rl, '  Confirm password: ')
     if (password !== confirm) throw new Error('Passwords do not match')

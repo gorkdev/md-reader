@@ -83,10 +83,10 @@ const EASE = 'cubic-bezier(0.16,1,0.3,1)'
 const DURATION = 420
 const EXIT_DURATION = 280
 const DATE_FILTERS = [
-  { key: 'today', label: 'Bugün' },
-  { key: 'yesterday', label: 'Dün' },
-  { key: '7d', label: 'Son 7 gün' },
-  { key: '30d', label: 'Son 30 gün' },
+  { key: 'today', label: 'Today' },
+  { key: 'yesterday', label: 'Yesterday' },
+  { key: '7d', label: 'Last 7 days' },
+  { key: '30d', label: 'Last 30 days' },
 ]
 
 function startOfDay(d) {
@@ -134,7 +134,7 @@ function DiffDetail({ changes, entry }) {
       }}
     >
       <div className="px-3 pt-2 pb-1 flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Değişiklikler</span>
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Changes</span>
         {entry && (
           <span className="text-[10px] font-medium" style={{ color: color?.text }}>
             {entry.displayName}
@@ -187,7 +187,7 @@ function ChangeHistory({ history }) {
         {/* Header */}
         <div className="px-4 py-3 border-b border-border flex items-center justify-between shrink-0">
           <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-            Düzenleme Geçmişi
+            Edit History
           </h3>
           {filtered.length > 0 && (
             <span className="text-[10px] text-muted-foreground tabular-nums">{filtered.length}</span>
@@ -249,7 +249,7 @@ function ChangeHistory({ history }) {
                           <span className="text-[10px] text-red-400 font-medium">−{entry.linesRemoved}</span>
                         )}
                         {entry.linesAdded === 0 && entry.linesRemoved === 0 && (
-                          <span className="text-[10px] text-muted-foreground">değişiklik yok</span>
+                          <span className="text-[10px] text-muted-foreground">no changes</span>
                         )}
                       </div>
                     </div>
@@ -267,7 +267,7 @@ function ChangeHistory({ history }) {
           </div>
         ) : (
           <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-            Bu dönemde düzenleme yok
+            No edits in this period
           </div>
         )}
       </div>
@@ -404,14 +404,14 @@ export default function FilePage({ mode = 'view' }) {
     })
     const offDeleted = on('file:deleted', ({ id: did }) => {
       if (did === id) {
-        toast.error('Bu dosya silindi')
+        toast.error('This file has been deleted')
         navigate('/')
       }
     })
     return () => { offUpdated(); offLockAcquired(); offLockReleased(); offDeleted() }
   }, [id, on, load, navigate, isEditMode, file])
 
-  // Heartbeat + cleanup — sadece sayfa terk edildiğinde kilidi bırak
+  // Heartbeat + cleanup — release lock only when page is actually left
   useEffect(() => {
     if (!isEditMode || !id) return
     let unmountingForReal = false
@@ -426,7 +426,7 @@ export default function FilePage({ mode = 'view' }) {
             await api.post(`/api/files/${id}/lock`)
           } catch {
             // Someone else holds the lock now — give up
-            toast.error('Kilit kayboldu. Görüntüleme moduna dönülüyor.')
+            toast.error('Lock lost. Returning to view mode.')
             navigate(`/file/${id}`)
           }
         }
@@ -445,8 +445,8 @@ export default function FilePage({ mode = 'view' }) {
     return () => {
       clearInterval(interval)
       window.removeEventListener('beforeunload', release)
-      // Sadece gerçek unmount'ta kilidi bırak (navigate away),
-      // React Strict Mode double-invoke'da değil
+      // Only release on real unmount (navigate away),
+      // not React Strict Mode double-invoke
       unmountingForReal = true
       setTimeout(() => {
         // Don't double-release if handleSave already released the lock
@@ -481,7 +481,7 @@ export default function FilePage({ mode = 'view' }) {
     } catch (e) {
       skipLockEvent.current = false
       if (e.status === 409) {
-        toast.error(`Dosya şu an ${e.data?.holder?.displayName || 'başka bir kullanıcı'} tarafından düzenleniyor`)
+        toast.error(`File is currently being edited by ${e.data?.holder?.displayName || 'another user'}`)
       } else {
         toast.error(e.message)
       }
@@ -492,7 +492,7 @@ export default function FilePage({ mode = 'view' }) {
     setDeleteConfirmOpen(false)
     try {
       await api.del(`/api/files/${id}`)
-      toast.success('Dosya silindi')
+      toast.success('File deleted')
       animatedNavigate('/')
     } catch (e) {
       toast.error(e.message)
@@ -515,7 +515,7 @@ export default function FilePage({ mode = 'view' }) {
       isSaving.current = true
       await api.put(`/api/files/${id}`, { body: editedContent })
       await api.del(`/api/files/${id}/lock`).catch(() => {})
-      toast.success('Kaydedildi')
+      toast.success('Saved')
       // Full page navigation to view mode — forces clean remount
       window.location.replace(`/file/${id}`)
     } catch (e) {
@@ -534,7 +534,7 @@ export default function FilePage({ mode = 'view' }) {
       <header className="border-b sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Home size={14} /> Anasayfa</span>
+            <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Home size={14} /> Home</span>
             <div className="w-px h-4 bg-border" />
             <div className="h-5 w-40 rounded bg-muted animate-pulse" />
             <div className="h-5 w-14 rounded-full bg-muted animate-pulse" />
@@ -617,7 +617,7 @@ export default function FilePage({ mode = 'view' }) {
               className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0"
             >
               <Home size={14} />
-              Anasayfa
+              Home
             </a>
             <div className="w-px h-4 bg-border shrink-0" />
             <span className="font-semibold truncate">{file.title}</span>
@@ -633,25 +633,25 @@ export default function FilePage({ mode = 'view' }) {
             style={{ opacity: show ? 1 : 0, transition: `opacity ${DURATION}ms ${EASE} 60ms` }}
           >
             {!isEditMode && canEdit && !lockedByOther && (
-              <Button size="sm" onClick={handleEdit}>Düzenle</Button>
+              <Button size="sm" onClick={handleEdit}>Edit</Button>
             )}
             {!isEditMode && canDelete && !lockedByOther && (
-              <Button size="sm" variant="destructive" onClick={() => setDeleteConfirmOpen(true)}>Sil</Button>
+              <Button size="sm" variant="destructive" onClick={() => setDeleteConfirmOpen(true)}>Delete</Button>
             )}
             {isEditMode && (
               <>
                 <Button size="sm" onClick={trySave} disabled={saving || !hasChanges}>
-                  {saving ? 'Kaydediliyor...' : 'Kaydet'}
+                  {saving ? 'Saving...' : 'Save'}
                 </Button>
                 <Button size="sm" variant="destructive" onClick={handleCancel} disabled={saving}>
-                  Vazgeç
+                  Cancel
                 </Button>
               </>
             )}
             <button
               onClick={toggleTheme}
               className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-              title={theme === 'dark' ? 'Açık mod' : 'Koyu mod'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
             >
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
@@ -662,17 +662,17 @@ export default function FilePage({ mode = 'view' }) {
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Dosyayı Sil</DialogTitle>
+            <DialogTitle>Delete File</DialogTitle>
             <DialogDescription>
-              <strong>{file.title}</strong> dosyası kalıcı olarak silinecek. Bu işlem geri alınamaz.
+              <strong>{file.title}</strong> will be permanently deleted. This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button size="sm" variant="outline" onClick={() => setDeleteConfirmOpen(false)}>
-              İptal
+              Cancel
             </Button>
             <Button size="sm" variant="destructive" onClick={doDelete}>
-              Evet, Sil
+              Yes, Delete
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -681,17 +681,17 @@ export default function FilePage({ mode = 'view' }) {
       <Dialog open={clearConfirmOpen} onOpenChange={setClearConfirmOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Tüm içerik silinecek</DialogTitle>
+            <DialogTitle>All content will be cleared</DialogTitle>
             <DialogDescription>
-              Dosyanın tüm içeriği boş olarak kaydedilecek. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?
+              The entire file content will be saved as empty. This action cannot be undone. Do you want to continue?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button size="sm" variant="outline" onClick={() => setClearConfirmOpen(false)}>
-              İptal
+              Cancel
             </Button>
             <Button size="sm" variant="destructive" onClick={doSave}>
-              Evet, Kaydet
+              Yes, Save
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -730,7 +730,7 @@ export default function FilePage({ mode = 'view' }) {
                 />
               ) : (
                 <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
-                  Yükleniyor...
+                  Loading...
                 </div>
               )}
             </div>

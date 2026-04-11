@@ -63,7 +63,7 @@ export default function LoginPage() {
     return () => clearTimeout(t)
   }, [])
 
-  // Login sayfasında scrollbar gizle
+  // Hide scrollbar on login page
   useEffect(() => {
     document.documentElement.classList.add('no-scrollbar')
     return () => { document.documentElement.classList.remove('no-scrollbar') }
@@ -84,9 +84,9 @@ export default function LoginPage() {
     } else {
       const raw = result.error || ''
       const friendly =
-        raw === 'Invalid credentials' ? 'Kullanıcı adı veya şifre hatalı'
-        : raw === 'Username and password required' ? 'Kullanıcı adı ve şifre gerekli'
-        : raw || 'Giriş başarısız'
+        raw === 'Invalid credentials' ? 'Invalid username or password'
+        : raw === 'Username and password required' ? 'Username and password are required'
+        : raw || 'Login failed'
       setError(friendly)
     }
   }

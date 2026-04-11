@@ -23,7 +23,7 @@ async function request(method, url, body) {
     })
   } catch {
     // Network error (server down, restart, etc.) — don't touch auth state
-    const err = new Error('Sunucuya bağlanılamıyor')
+    const err = new Error('Cannot connect to server')
     err.status = 0
     err.data = {}
     throw err

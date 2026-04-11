@@ -39,7 +39,7 @@ function buildMeta(relative, raw) {
     id: encodeId(relative),
     path: relative,
     title: meta.title || fileName.replace('.md', ''),
-    date: meta.date || 'Bilinmiyor',
+    date: meta.date || 'Unknown',
     category: meta.category || folder,
     fileName,
     wordCount: body.split(/\s+/).filter(Boolean).length,
