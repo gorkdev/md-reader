@@ -32,3 +32,5 @@ dist-ssr
 # Runtime data
 data/users.json
 data/locks.json
+data/blame/
+data/history/

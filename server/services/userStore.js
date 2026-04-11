@@ -50,7 +50,7 @@ export async function verifyPassword(username, plainPassword) {
   return strip(user)
 }
 
-export async function createUser({ username, displayName, password, role }) {
+export async function createUser({ username, displayName, password, role, color }) {
   if (!['viewer', 'editor', 'admin'].includes(role)) {
     throw new Error(`Invalid role: ${role}`)
   }
@@ -68,9 +68,22 @@ export async function createUser({ username, displayName, password, role }) {
     displayName,
     passwordHash,
     role,
+    color: color || null,
     createdAt: new Date().toISOString(),
   }
   users.push(user)
   await writeUsers(users)
   return strip(user)
+}
+
+export async function updateUser(id, updates) {
+  const users = await readUsers()
+  const idx = users.findIndex(u => u.id === id)
+  if (idx === -1) throw new Error('User not found')
+  const allowed = ['displayName', 'role', 'color']
+  for (const key of allowed) {
+    if (updates[key] !== undefined) users[idx][key] = updates[key]
+  }
+  await writeUsers(users)
+  return strip(users[idx])
 }

@@ -2,13 +2,14 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
-/* Prevent Radix Dialog scroll-lock from hiding the scrollbar and causing
-   a horizontal layout shift when modals open. The !important overrides
-   the inline styles injected by react-remove-scroll. */
-html, body {
-  overflow-y: scroll !important;
+/* Prevent layout shift when Radix Dialog toggles scroll lock */
+html {
+  scrollbar-gutter: stable;
   margin-right: 0 !important;
   padding-right: 0 !important;
+}
+html.no-scrollbar, html.no-scrollbar body {
+  overflow-y: hidden !important;
 }
 
 /* MDXEditor — match shadcn dark theme */
@@ -122,6 +123,9 @@ html, body {
   margin: 0.75rem 0;
 }
 .mdx-shell .mdx-content-editable a {
+  color: #2563eb;
+}
+.dark .mdx-shell .mdx-content-editable a {
   color: #60a5fa;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -165,6 +169,11 @@ html, body {
   color: var(--popover-foreground) !important;
   border: 1px solid var(--border);
   border-radius: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+.dark .mdx-shell .mdxeditor-popup-container,
+.dark .mdx-shell .mdxeditor-select-content,
+.dark .mdx-shell [data-radix-popper-content-wrapper] {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
@@ -193,6 +202,58 @@ html, body {
 }
 .mdx-shell .mdxeditor-popup-container button:hover {
   opacity: 0.85;
+}
+
+/* Blame gutter — GitLens-style inline annotations */
+.blame-preview-wrapper {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+.blame-gutter {
+  width: 140px;
+  flex-shrink: 0;
+  position: relative;
+  border-right: 1px solid var(--border);
+  margin-right: 1.5rem;
+}
+.blame-gutter-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.2em;
+}
+.blame-gutter-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-right: 0.75rem;
+  text-align: right;
+  width: 100%;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.blame-gutter-row:hover .blame-gutter-entry {
+  opacity: 1;
+}
+.blame-gutter-user {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.blame-gutter-time {
+  font-size: 10px;
+  opacity: 0.6;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.blame-gutter-empty {
+  height: 100%;
 }
 
 /* Prose task list — override typography plugin for task items */
@@ -326,9 +387,24 @@ html, body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+  ::selection {
+    background: oklch(0.72 0.14 178 / 0.3);
+    color: oklch(0.2 0.02 178);
+  }
+  .dark ::selection {
+    background: oklch(0.65 0.14 178 / 0.35);
+    color: oklch(0.97 0 0);
+  }
+  /* Smooth theme transition */
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: background-color 0.4s ease, color 0.3s ease, border-color 0.4s ease, box-shadow 0.4s ease !important;
+  }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar — adapts to theme */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -336,17 +412,17 @@ html, body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.35 0 0);
+  background: var(--border);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.45 0 0);
+  background: var(--muted-foreground);
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: oklch(0.35 0 0) transparent;
+  scrollbar-color: var(--border) transparent;
 }
 
 @keyframes pathFloat {

@@ -15,7 +15,10 @@ export function AuthProvider({ children }) {
     }
     api.get('/api/auth/me')
       .then(data => setUser(data.user))
-      .catch(() => setToken(null))
+      .catch(err => {
+        // Only clear token on real auth failures, not network errors
+        if (err.status === 401) setToken(null)
+      })
       .finally(() => setLoading(false))
   }, [])
 

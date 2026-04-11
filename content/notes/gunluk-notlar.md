@@ -6,19 +6,18 @@
 
 ## Morning
 
-I arrived at the office early this morning and checked emails. One of the three urgent requests from the customer was related to performance issues on a page that needs improvement. I started evaluating the webpack configuration to reduce build time.
+Arrived at the office early and checked emails. One of three urgent customer requests was about performance issues on a page that needs improvement. Started evaluating the webpack configuration to reduce build time.
 
 ## Afternoon
 
-I had a meeting with the team lead after lunch. He mentioned the new development environment rules and emphasized code quality standards. I learned that everyone needs to update the new ESLint configuration.
+Had a meeting with the team lead after lunch. He mentioned the new development environment rules and emphasized code quality standards. Everyone needs to update the new ESLint configuration.
 
 ## Evening
 
-I worked on test writing again in the evening. I added jest snapshot tests to increase unit test coverage. When I ran the tests, I achieved an 87% pass rate, which is below our target.
+Worked on test writing in the evening. Added Jest snapshot tests to increase unit test coverage. Achieved an 87% pass rate, which is below our target.
 
-## To-Do List
+## To-Do
 
-<!-- düzenleyen: Gorkem — 10/04/2026 22:05 -->
 * [ ] Complete integration tests
 * [ ] Update deployment guide
 * [ ] Review technical documentation
@@ -26,4 +25,4 @@ I worked on test writing again in the evening. I added jest snapshot tests to in
 
 ## Note
 
-There is an important customer presentation tomorrow. I need to complete the preparations.
+There is an important customer presentation tomorrow. Need to complete the preparations.

@@ -2,6 +2,17 @@
 import readline from 'readline'
 import { createUser } from '../server/services/userStore.js'
 
+const COLORS = [
+  { name: 'Blue',   value: '#60a5fa' },
+  { name: 'Green',  value: '#4ade80' },
+  { name: 'Orange', value: '#fb923c' },
+  { name: 'Pink',   value: '#f472b6' },
+  { name: 'Yellow', value: '#facc15' },
+  { name: 'Teal',   value: '#2dd4bf' },
+  { name: 'Purple', value: '#a78bfa' },
+  { name: 'Red',    value: '#f87171' },
+]
+
 function ask(rl, question) {
   return new Promise(resolve => {
     rl.question(question, answer => resolve(answer.trim()))
@@ -31,8 +42,14 @@ async function main() {
     const roleInput = await ask(rl, '  Role (viewer / editor / admin) [editor]: ')
     const role = roleInput || 'editor'
 
-    const user = await createUser({ username, displayName, password, role })
-    console.log(`\n  ✓ Created: ${user.username} (${user.role}) — id ${user.id}\n`)
+    console.log('\n  Colors:')
+    COLORS.forEach((c, i) => console.log(`    ${i + 1}. ${c.name}`))
+    const colorInput = await ask(rl, `\n  Color (1-${COLORS.length}) [1]: `)
+    const colorIdx = parseInt(colorInput || '1', 10) - 1
+    const color = COLORS[colorIdx >= 0 && colorIdx < COLORS.length ? colorIdx : 0].value
+
+    const user = await createUser({ username, displayName, password, role, color })
+    console.log(`\n  ✓ Created: ${user.username} (${user.role}) — id ${user.id} — color ${color}\n`)
     rl.close()
   } catch (e) {
     console.error(`\n  ✗ ${e.message}\n`)

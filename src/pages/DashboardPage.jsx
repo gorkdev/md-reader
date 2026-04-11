@@ -1,12 +1,15 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useSocket } from '@/contexts/SocketContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { api } from '@/lib/api'
 import LockBadge from '@/components/LockBadge'
 import PresenceIndicator from '@/components/PresenceIndicator'
 import NewFileDialog from '@/components/NewFileDialog'
+import CreateUserDialog from '@/components/CreateUserDialog'
 import { Button } from '@/components/ui/button'
+import { Sun, Moon } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -27,6 +30,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+const EASE = 'cubic-bezier(0.16,1,0.3,1)'
+const EXIT_DURATION = 280
+
 const CATEGORY_LABELS = {
   notes: 'Notes',
   guides: 'Guides',
@@ -43,7 +49,7 @@ function filterBySearch(files, search) {
   )
 }
 
-function FileTable({ files, onRowClick }) {
+function FileTable({ files, onRowClick, currentUserId }) {
   if (files.length === 0) {
     return (
       <div className="py-20 text-center text-sm text-muted-foreground">
@@ -79,7 +85,7 @@ function FileTable({ files, onRowClick }) {
                   <p className="font-medium group-hover:text-foreground transition-colors">{file.title}</p>
                   <p className="text-xs text-muted-foreground">{file.fileName}</p>
                 </div>
-                {file.lock && <LockBadge holder={file.lock} />}
+                {file.lock && file.lock.userId !== currentUserId && <LockBadge holder={file.lock} />}
               </div>
             </TableCell>
             <TableCell>
@@ -103,12 +109,29 @@ function FileTable({ files, onRowClick }) {
 export default function DashboardPage() {
   const { user, logout } = useAuth()
   const { on, presence } = useSocket()
+  const { theme, toggle: toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [allFiles, setAllFiles] = useState([])
   const [loadingFiles, setLoadingFiles] = useState(true)
   const [search, setSearch] = useState('')
   const [mounted, setMounted] = useState(false)
+  const [exiting, setExiting] = useState(false)
   const [logoutOpen, setLogoutOpen] = useState(false)
+  const pendingNav = useRef(null)
+
+  const animatedNavigate = useCallback((to) => {
+    if (exiting) return
+    pendingNav.current = to
+    setExiting(true)
+  }, [exiting])
+
+  useEffect(() => {
+    if (!exiting) return
+    const timer = setTimeout(() => {
+      if (pendingNav.current) navigate(pendingNav.current)
+    }, EXIT_DURATION)
+    return () => clearTimeout(timer)
+  }, [exiting, navigate])
 
   const refresh = () => {
     api.get('/api/files').then(data => setAllFiles(data.files)).catch(() => {})
@@ -152,19 +175,41 @@ export default function DashboardPage() {
 
   const initial = user?.displayName?.charAt(0)?.toUpperCase() || user?.username?.charAt(0)?.toUpperCase() || 'U'
 
+  const show = mounted && !exiting
+
+  const dashAnim = (delay = 0) => ({
+    opacity: show ? 1 : 0,
+    transform: show ? 'translateY(0) scale(1)' : (exiting ? 'translateY(-8px) scale(0.995)' : 'translateY(8px) scale(1)'),
+    transition: exiting
+      ? `opacity ${EXIT_DURATION}ms ${EASE}, transform ${EXIT_DURATION}ms ${EASE}`
+      : `opacity 700ms ease-out ${delay}ms, transform 700ms ease-out ${delay}ms`,
+  })
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
       {/* Header */}
-      <header className="border-b sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
+      <header className="border-b z-10 bg-background/95 backdrop-blur-sm shrink-0">
         <div className="container mx-auto px-6 h-14 flex items-center justify-between">
           <span className="font-semibold">MD Reader</span>
           <div className="flex items-center gap-3">
+            {user?.role === 'admin' && (
+              <CreateUserDialog>
+                <Button size="sm" variant="outline">+ Kullanıcı</Button>
+              </CreateUserDialog>
+            )}
             {user?.role && user.role !== 'viewer' && (
               <NewFileDialog onCreated={refresh}>
                 <Button size="sm" variant="outline">+ Yeni</Button>
               </NewFileDialog>
             )}
             <PresenceIndicator users={presence} />
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+              title={theme === 'dark' ? 'Açık mod' : 'Koyu mod'}
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             <div className="w-px h-4 bg-border" />
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold">
@@ -199,15 +244,9 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-10">
+      <main className="container mx-auto px-6 py-6 flex-1 min-h-0 flex flex-col overflow-hidden">
         {/* Title */}
-        <div
-          className="mb-10 transition-all duration-700 ease-out"
-          style={{
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? 'translateY(0)' : 'translateY(8px)',
-          }}
-        >
+        <div className="mb-6 shrink-0" style={dashAnim(0)}>
           <h1 className="text-2xl font-semibold tracking-tight mb-1">Files</h1>
           <p className="text-sm text-muted-foreground">
             {loadingFiles ? 'Yükleniyor...' : `${allFiles.length} markdown files across ${categories.length} categories`}
@@ -215,14 +254,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Controls + Table */}
-        <Tabs defaultValue="all" className="w-full">
+        <Tabs defaultValue="all" className="w-full flex-1 min-h-0 flex flex-col">
           <div
-            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 transition-all duration-700 ease-out"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? 'translateY(0)' : 'translateY(8px)',
-              transitionDelay: '80ms',
-            }}
+            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6"
+            style={dashAnim(80)}
           >
             <TabsList>
               <TabsTrigger value="all">All</TabsTrigger>
@@ -242,22 +277,16 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div
-            className="border rounded-lg transition-all duration-700 ease-out"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? 'translateY(0)' : 'translateY(8px)',
-              transitionDelay: '160ms',
-            }}
-          >
+          <div className="border rounded-lg flex-1 min-h-0 overflow-auto" style={dashAnim(160)}>
             <TabsContent value="all" className="m-0">
-              <FileTable files={filterBySearch(allFiles, search)} onRowClick={file => navigate(`/file/${file.id}`)} />
+              <FileTable files={filterBySearch(allFiles, search)} onRowClick={file => animatedNavigate(`/file/${file.id}`)} currentUserId={user?.id} />
             </TabsContent>
             {categories.map(cat => (
               <TabsContent key={cat} value={cat} className="m-0">
                 <FileTable
                   files={filterBySearch(allFiles.filter(f => f.category === cat), search)}
-                  onRowClick={file => navigate(`/file/${file.id}`)}
+                  onRowClick={file => animatedNavigate(`/file/${file.id}`)}
+                  currentUserId={user?.id}
                 />
               </TabsContent>
             ))}

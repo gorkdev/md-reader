@@ -18,14 +18,17 @@ import {
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
 import BlockTypeSelectToolbar from '@/components/BlockTypeSelectToolbar'
+import BlameOverlay from '@/components/BlameOverlay'
+import { useTheme } from '@/contexts/ThemeContext'
 
-export default function MarkdownEditor({ value, onChange, className = '' }) {
+export default function MarkdownEditor({ value, onChange, blame, className = '' }) {
+  const { theme } = useTheme()
   return (
-    <div className={`mdx-shell ${className}`}>
+    <div className={`mdx-shell relative ${className}`}>
       <MDXEditor
         markdown={value || ''}
         onChange={onChange}
-        className="dark-theme dark-editor"
+        className={theme === 'dark' ? 'dark-theme dark-editor' : ''}
         contentEditableClassName="mdx-content-editable"
         plugins={[
           headingsPlugin(),
@@ -49,6 +52,7 @@ export default function MarkdownEditor({ value, onChange, className = '' }) {
                 <Separator />
                 <CreateLink />
                 <InsertThematicBreak />
+                {blame && blame.length > 0 && <BlameOverlay blame={blame} />}
               </>
             ),
           }),

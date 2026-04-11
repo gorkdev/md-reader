@@ -18,9 +18,9 @@ function FloatingPaths() {
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="white" stopOpacity="0" />
-            <stop offset="50%" stopColor="white" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
+            <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+            <stop offset="50%" stopColor="currentColor" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -32,7 +32,7 @@ function FloatingPaths() {
               stroke="url(#line-grad)"
               strokeWidth="0.5"
             />
-            <circle r="1.5" fill="white" fillOpacity="0.3">
+            <circle r="1.5" fill="currentColor" fillOpacity="0.3">
               <animateMotion
                 dur={line.dur}
                 repeatCount="indefinite"
@@ -44,7 +44,7 @@ function FloatingPaths() {
         ))}
       </svg>
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-white/[0.02] blur-[100px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-foreground/[0.02] blur-[100px]" />
     </div>
   )
 }
@@ -61,6 +61,12 @@ export default function LoginPage() {
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 50)
     return () => clearTimeout(t)
+  }, [])
+
+  // Login sayfasında scrollbar gizle
+  useEffect(() => {
+    document.documentElement.classList.add('no-scrollbar')
+    return () => { document.documentElement.classList.remove('no-scrollbar') }
   }, [])
 
   useEffect(() => {
@@ -86,9 +92,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex bg-foreground">
+    <div className="h-screen flex bg-background overflow-hidden">
       {/* Left panel */}
-      <div className="hidden lg:flex lg:flex-1 relative flex-col justify-between p-10 text-background overflow-hidden">
+      <div className="hidden lg:flex lg:flex-1 relative flex-col justify-between p-10 text-foreground overflow-hidden">
         <FloatingPaths />
 
         <div className="relative z-10">
@@ -96,7 +102,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 max-w-lg">
-          <h1 className="text-5xl font-semibold tracking-tight leading-[1.1] mb-4 text-background">
+          <h1 className="text-5xl font-semibold tracking-tight leading-[1.1] mb-4 text-foreground">
             Manage your
             <br />
             markdown files,
@@ -115,7 +121,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right panel */}
-      <div className="w-full lg:w-[520px] flex flex-col bg-background lg:rounded-l-2xl relative">
+      <div className="w-full lg:w-[520px] flex flex-col bg-muted/30 lg:rounded-l-2xl relative">
         <div className="p-6 lg:hidden">
           <span className="text-sm font-semibold">MD Reader</span>
         </div>
@@ -169,7 +175,7 @@ export default function LoginPage() {
               </div>
 
               {error && (
-                <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive flex items-start gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                <div key={error} className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive flex items-start gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
                   <span className="leading-5">⚠</span>
                   <span className="leading-5">{error}</span>
                 </div>

@@ -13,21 +13,35 @@ async function request(method, url, body) {
   const headers = { 'Content-Type': 'application/json' }
   const token = getToken()
   if (token) headers.Authorization = `Bearer ${token}`
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  })
+
+  let res
+  try {
+    res = await fetch(url, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    })
+  } catch {
+    // Network error (server down, restart, etc.) — don't touch auth state
+    const err = new Error('Sunucuya bağlanılamıyor')
+    err.status = 0
+    err.data = {}
+    throw err
+  }
+
   const data = await res.json().catch(() => ({}))
 
   if (!res.ok) {
-    // Auto-redirect on 401 EXCEPT when the failed request is the login itself —
-    // otherwise the user can never see the "wrong password" message.
     const isLoginRequest = url.includes('/api/auth/login')
     if (res.status === 401 && !isLoginRequest) {
-      setToken(null)
-      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
+      // Only clear auth if the token is actually invalid, not a transient error.
+      // Verify by checking the error message from the server.
+      const serverMsg = data.error || ''
+      if (serverMsg === 'Invalid token' || serverMsg === 'Missing token' || serverMsg === 'User not found') {
+        setToken(null)
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+          window.location.href = '/login'
+        }
       }
     }
     const err = new Error(data.error || `HTTP ${res.status}`)

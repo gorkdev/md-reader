@@ -42,7 +42,7 @@ function parseWithAnnotations(rawText) {
 }
 
 // Run a line-array diff, emitting per-line ops with old/new indices.
-function lineArrayDiff(oldLines, newLines) {
+export function lineArrayDiff(oldLines, newLines) {
   const chunks = diffArrays(oldLines, newLines)
   const ops = []
   let oldIdx = 0

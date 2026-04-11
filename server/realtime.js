@@ -7,7 +7,12 @@ const onlineUsers = new Map() // socketId → { id, displayName, role }
 
 export function initRealtime(httpServer) {
   io = new Server(httpServer, {
-    cors: { origin: true, credentials: true },
+    cors: {
+      origin: process.env.NODE_ENV === 'production'
+        ? (process.env.CORS_ORIGIN || false)
+        : true,
+      credentials: true,
+    },
   })
 
   io.use(async (socket, next) => {

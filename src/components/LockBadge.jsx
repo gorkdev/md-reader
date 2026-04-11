@@ -1,13 +1,30 @@
+import { getUserColor } from '@/lib/utils'
+import { useTheme } from '@/contexts/ThemeContext'
+
 export default function LockBadge({ holder, className = '' }) {
+  const { theme } = useTheme()
   if (!holder) return null
+  const color = getUserColor(holder.username || holder.displayName, theme)
+
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-300 ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-medium ${className}`}
+      style={{
+        borderColor: `hsl(${color.hue} 70% 50% / 0.3)`,
+        backgroundColor: color.bg,
+        color: color.text,
+      }}
       title={`Düzenleniyor: ${holder.displayName}`}
     >
       <span className="relative flex h-1.5 w-1.5">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-400" />
+        <span
+          className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+          style={{ backgroundColor: color.dotPing }}
+        />
+        <span
+          className="relative inline-flex h-1.5 w-1.5 rounded-full"
+          style={{ backgroundColor: color.dot }}
+        />
       </span>
       {holder.displayName} düzenliyor
     </span>

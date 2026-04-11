@@ -23,9 +23,9 @@ The following topics were discussed at today's project progress meeting:
 
 | Responsible | Task | Deadline |
 |-----------|-------|----------|
-| Ahmet | Redux state management refactor | 10.04.2026 |
-| Fatma | API documentation | 08.04.2026 |
-| Selim | Performance testing setup | 15.04.2026 |
+| Alex | Redux state management refactor | 10.04.2026 |
+| Sarah | API documentation | 08.04.2026 |
+| Mike | Performance testing setup | 15.04.2026 |
 
 ## Note
 
